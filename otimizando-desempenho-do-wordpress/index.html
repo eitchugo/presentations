@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title>Otimizando o desempenho do WordPress</title>
+
+    <meta name="description" content="Algumas formas de como otimizar o desempenho do WordPress">
+    <meta name="author" content="Hugo Cisneiros (Eitch)">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="../reveal.js/css/reveal.min.css">
+    <link rel="stylesheet" href="../reveal.js/css/theme/default.css" id="theme">
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="../reveal.js/lib/css/zenburn.css">
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+      document.write( '<link rel="stylesheet" href="../reveal.js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+    </script>
+
+    <!--[if lt IE 9]>
+      <script src="../reveal.js/lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+  <div class="reveal">
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+
+      <section>
+        <h1>Otimizando o desempenho do</h1>
+        <p><img src="wordpress-logo-hoz-rgb.png" width="498" height="113" title="WordPress" alt="WordPress" style="background-color: #ffffff; padding: 10px;" /></p>
+
+        <p><small>Por <a href="http://www.devin.com.br">Hugo Cisneiros</a> | <a href="http://www.devin.com.br">http://www.devin.com.br</a></small></p>
+      </section>
+
+      <section>
+        <section>
+          <h2>Você instala um WordPress e está tudo lindo!</h2>
+          <br/>
+          <h1>Certo?</h1>
+        </section>
+        <section data-state="alert">
+          <h1>Errado!</h1>
+        </section>
+        <section data-state="alert">
+          <h2>Alguns problemas:</h2>
+          <ul>
+            <li class="fragment">Desenvolvedores acham que se funcionar na máquina deles, não há problemas...</li><br/>
+            <li class="fragment">"Meu site não tem muitos acessos..."</li><br/>
+            <li class="fragment">Faço amanhã!</li><br/>
+          </ul>
+        </section>
+      </section>
+
+      <section>
+        <section>
+          <h1>Desempenho?</h1>
+          <ul>
+            <li class="fragment">Ninguém gosta de site lento ou fora do ar.</li><br/>
+            <li class="fragment">Cada milisegundo importa pro usuário final. Pode não parecer muito, mas importa.</li><br/>
+            <li class="fragment">Google mensurou perda de 20% de tráfego em um aumento de 400ms.</li><br/>
+            <li class="fragment">Amazon mensurou perda de 1% de vendas em um aumento de 100ms.</li>
+          </ul><br/>
+        </section>
+        <section data-state="alert">
+          <h1>Tenso né?</h1>
+        </section>
+      </section>
+
+      <section>
+        <h1>Desempenho?</h1><br/>
+        <h3>Nosso objetivo: carregar a página o mais rápido possível e para o maior número de pessoas possíveis ao mesmo tempo.</h3>
+      </section>
+
+      <section>
+        <h2>Tamanho da página e otimizações HTML</h2>
+        <p>Não vamos falar aqui sobre coisas como:</p><br/>
+        <ul>
+          <li>Tamanho das páginas;</li>
+          <li>Javascript e CSS unificados e minimizados;</li>
+          <li>Compressão de imagens;</li>
+          <li>Javascript não-bloqueador.</li>
+        </ul><br/><br/>
+        <p>Se desenvolvedores não sabem desses tópicos, procurem saber urgentemente!</p>
+      </section>
+
+      <section>
+        <h2>Dicas genéricas do WordPress</h2>
+        <p>Também não vamos falar muito sobre o que todo mundo fala:</p><br/>
+        <ul>
+          <li>Tenha sempre o WordPress atualizado;</li>
+          <li>Evitar plugins ruins (só porque ele faz algo legal, não quer dizer que é bom);</li>
+          <li>Remover todos os plugins e comparar desempenho. Ir habilitando um a um;</li>
+        </ul><br/><br/>
+        <p>Esses itens aí todo usuário de WordPress tem que ter decorado!</p>
+      </section>
+
+      <section data-state="soothe">
+        <h1>Dicas do lado do servidor</h1>
+        <p><small>(essas todo sysadmin tem que saber)</small></p>
+      </section>
+
+      <section>
+        <section>
+          <h2>Item 1: Armazenamento</h2>
+        </section>
+          
+        <section>
+          <h2>Como você armazena o WordPress?</h2><br/>
+          <ul>
+            <li>Em instalações pequenas tudo funciona em uma máquina só? Os arquivos PHP, as imagens de upload.</li><br/>
+            <li>Em instalações grandes, várias máquinas compartilhando um storage comum?</li>
+          </ul>
+        </section>
+
+        <section data-state="soothe">
+          <h2>Arquivos locais preferencialmente</h2>
+          <ul>
+            <li>A maioria dos arquivos do WordPress é estática, então pode ser colocada em disco local;</li><br/>
+            <li>A exceção são os arquivos de upload (<em>wp-content/upload</em>), que precisa ser compartilhado. Compartilhe apenas esse diretório, e para todo o resto invente um método de distribuição: pacote, rsync, ou outros.</li>
+          </ul><br/><br/>
+        </section>
+      </section>
+
+      <section>
+        <section>
+          <h2>Item 2: PHP e Servidor Web</h2>
+        </section>
+          
+        <section>
+          <h2>PHP é lento e gasta muita memória</h2>
+          <ul>
+            <li>Isso é um fato. Nem dá para discutir;</li><br/>
+            <li>Quanto mais memória um plugin ou operação do WordPress alocar, provavelmente mais lento ele vai ser pra carregar;</li><br/>
+            <li>Você acha que memória é sempre o problema? Pense duas vezes: processamento pode ser bem pior;</li><br/>
+          </ul>
+        </section>
+
+        <section data-state="soothe">
+          <h2>Reduza ao máximo as chamadas PHP</h2>
+          <ul>
+            <li>Para os desenvolvedores: não é porque você tem muito hardware (processamento e memória) que você pode programar como quiser. Otimize o seu código.</li><br/>
+            <li>Use PHP para chamadas totalmente dinâmicas. Não é muito legal fazer um plugin que cria uma imagem dinamicamente;</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>mod_php vs. mod_fcgid</h2>
+          <ul>
+            <li>Pra quem usa Apache, mod_php é a implementação padrão;</li><br/>
+            <li>Prefira o fcgi style (no Apache, mod_fcgid) (também tem o php-fpm)</li><br/>
+            <li>Mas por que não usar essa opção padrão?</li>
+          </ul>
+        </section>
+
+        <section data-state="soothe">
+          <h3>antes</h3>
+          <p><img src="top-antes.png" width="913" height="103" title="top antes" alt="top antes" /></p>
+          <h3>mod_php</h3>
+          <p><img src="top-mod_php.png" width="805" height="103" title="top mod_php" alt="top mod_php" /></p>
+          <h3>mod_fcgid</h3>
+          <p><img src="top-fcgid.png" width="846" height="104" title="top mod_fcgid" alt="top mod_fcgid" /></p>
+        </section>
+
+        <section data-state="soothe">
+          <h3>mod_php</h3>
+          <p><img src="siege-mod_php.png" width="475" height="250" title="siege mod_php" alt="siege mod_php" /></p>
+        </section>
+
+        <section data-state="soothe">
+          <h3>mod_fcgid</h3>
+          <p><img src="siege-fcgid.png" width="487" height="247" title="siege mod_fcgid" alt="siege mod_fcgid" /></p>
+        </section>
+
+        <section>
+          <h2>Forks e Threads</h2>
+          <ul>
+            <li>Vá diminuindo a opção <em>memory_limit</em> no php.ini e veja o menor valor que o seu WordPress aguenta;</li><br/>
+            <li>Calcule quanto seu servidor aguenta: Tamanho médio do processo PHP vezes número de usuários simultâneos;</li><br/>
+            <li>Configure o web server para liberar as threads com certa frequencia (<em>recycling</em>), assim a memória é liberada frequentemente também. (perde um mínimo de desempenho no processamento mas ganha bastante segurança na memória.)</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Prefira usar os recursos nativos dos servidores web</h2>
+          <ul>
+            <li>Redirects podem e devem ser feitos via Redirect ou Rewrite do servidor, não pelo WordPress;</li><br/>
+            <li>Itens estáticos devem ser servidos sempre sem PHP. Pode até ser em um servidor separado (imagens, javascript/css);</li><br/>
+            <li>Se a cada requisição você gera uma lista dinâmica, considere gerar uma lista de tempos em tempos (exemplo: imagens upload de um wordpress multi-site);</li>
+          </ul>
+        </section>
+      </section>
+
+      <section>
+        <section>
+          <h2>Item 3: Servidor MySQL</h2>
+        </section>
+
+        <section>
+	  <h2>Tunning constante</h2>
+          <ul>
+            <li>Sempre habilite o query cache;</li><br/>
+            <li>Use uma ferramenta como o <em>mysqltuner</em> para otimizar buffers e outros parâmetros;</li><br/>
+            <li>Habilite o <em>slow-query</em> para 2 ou 3 segundos e veja sempre o log de queries lentas para identificar códigos problemáticos;</li><br/>
+            <li>Crie rotina diária de OPTIMIZE em todas as tabelas pra evitar surpresas acumuladas.</li><br/>
+          </ul>
+        </section>
+
+        <section>
+	  <h2>Réplicas de Leitura</h2>
+          <ul>
+            <li>Na maioria das vezes, consultas somente-leitura são as que mais aparecem no WordPress;</li><br/>
+            <li>Se o processamento do MySQL estiver muito alto, Use uma ou várias replicas de leitura para amenizar.</li><br/>
+          </ul>
+        </section>
+
+        <section data-state="soothe">
+          <h2>HyperDB</h3>
+          <ul>
+            <li>Plugin feito pelo pessoal do WordPress.com que substitui o WPDB nativo na hora de se conectar aos bancos de dados;</li><br/>
+            <li>Pode-se configurá-lo para ler de vários slaves e escrever apenas no master (load balancing);</li><br/>
+            <li>Pode-se fazer <em>particionamento</em> na sua instalação, direcionando certas tabelas para determinados servidores. Útil principalmente em instalações multi-sites (network);</li><br/>
+            <li>Quando dá erro na conexão, ele tenta de novo e não deixa seu site TOTALMENTE indisponível.</li>
+        </section>
+      </section>
+
+      <section>
+        <section>
+          <h2>Item 4: Cache</h2>
+          <br/><br/>
+          <h1>O mais importante de todos!</h1>
+        </section>
+
+        <section>
+	  <h2>Como e quando fazer cache?</h2>
+          <ul>
+            <li>Mexer no servidor web, código, banco de dados, entre outros, melhora mas não faz milagres. <span class="fragment"><strong>Quem faz milagre é o cache</strong>.</span></li><br/>
+            <li class="fragment">Separe todos os itens estáticos (que podem ser vistos por todos os usuários <strong>igualmente</strong> e os dinâmicos (muda de usuário pra usuário);</li><br/>
+            <li class="fragment">Exemplo: <span class="fragment">Estático é o texto do post.</span> <span class="fragment">Dinâmico é a quantidade de visualizações do post.</span></li><br/>
+          </ul>
+        </section>
+
+        <section data-state="soothe">
+          <h2>Faça cache de tudo que for estático!</h3>
+          <ul>
+            <li>O cache permite que a página seja gerada apenas uma vez e servida para muitos;</li><br/>
+            <li>Há várias técnicas de cache: cache de objetos, de consultas ao banco, de código php interpretado (opcode), de páginas no servidor web;</li><br/>
+            <li>Falaremos apenas de cache do lado do servidor.</li><br/>
+          </ul>
+        </section>
+
+        <section data-state="alert">
+          <h2>Cache nível noob</h3>
+          <ul>
+            <li class="fragment">Baixe a sua página principal com um wget/curl e coloque o index.html na home do seu wordpress;</li><br/>
+            <li class="fragment">Faça isso como uma rotina (exemplo: de 1 em 1 minuto) e você acaba de criar um cache e sua home aguentará muita porrada;</li><br/>
+            <li class="fragment">Para os itens dinâmicos dentro da página, substitua por javascript ou iframes (podem me bater agora).</li><br/>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Cache nível estou começando a saber o que estou fazendo</h3>
+          <ul>
+            <li class="fragment">Use o plugin <strong>W3-Total-Cache</strong>;</li><br/>
+            <li class="fragment">Com ele você pode: fazer cache das páginas em disco dinamicamente (melhor que o nível noob);</li><br/>
+            <li class="fragment">Fazer cache de objetos do WordPress, de opcode, banco de dados...</li><br/>
+            <li class="fragment">Usar CDN para imagens, habilitar compressão e Expires no servidor...</li><br/>
+          </ul>
+        </section>
+
+        <section data-state="soothe">
+          <h2>Cache nível 31337</h3>
+          <ul>
+            <li class="fragment">Use o <strong>varnish</strong> como front-end pro servidor web;</li><br/>
+            <li class="fragment">Com ele você controla exatamente o que fazer cache ou não, por quanto tempo, baseado em URL, em extensão, em Cookie, ou seja lá o que for que tiver na requisição HTTP;</li><br/>
+            <li class="fragment">Se o site cai, ele ainda pode servir o que já tá armazenado em cache. Assim você não deixa seus usuários na mão;</li><br/>
+          </ul>
+        </section>
+
+        <section data-state="soothe">
+          <h2>Cache nível 31337 p0w3r m4s73r bl4st3r ul7r4</h3>
+          <ul>
+            <li class="fragment">Combine o <strong>W3-Total-Cache</strong> com o <strong>varnish</strong>;</li><br/>
+            <li class="fragment">Use o varnish para cache das páginas, e o W3-Total-Cache para todo o resto;</li><br/>
+            <li class="fragment">O W3-Total-Cache vem com suporte ao varnish. Quando algo é atualizado, ele avisa para o Varnish invalidar o cache e servir a página atualizada (PURGE/BAN);</li><br/>
+          </ul>
+        </section>
+
+        <section data-state="alert">
+          <h2>Exemplo simples, SEM cache</h2>
+
+          <table style="font-size: 24pt; line-height: 26pt; margin: 0 auto 0 auto"><tr><td>
+CPU: E7500 @ 2.93GHz<br/>
+3GB de RAM<br/>
+apache2 + mod_php<br/>
+mysql 5.5
+          </td><td>
+Concurrency Level: 50<br/>
+Time taken for tests: 217.099 seconds<br/>
+Complete requests: 932<br/>
+Requests per second: 4.29 [#/sec] (mean)<br/>
+Time per request: 11646.966 [ms] (mean)
+          </td></tr></table><br/>
+
+        <p><img src="top-semcache.png" width="854" height="232" title="top sem cache" alt="top sem cache" /></p>
+       </section>
+
+        <section data-state="soothe">
+          <h2>Exemplo simples, COM cache</h2>
+
+          <table style="font-size: 24pt; line-height: 26pt; margin: 0 auto 0 auto"><tr><td>
+CPU: E7500 @ 2.93GHz<br/>
+3GB de RAM<br/>
+apache2 + mod_php<br/>
+mysql 5.5
+          </td><td>
+Concurrency Level: 50<br/>
+Time taken for tests: 1.602 seconds<br/>
+Complete requests: 10000<br/>
+Requests per second: 6242.42 [#/sec] (mean)<br/>
+Time per request: 8.010 [ms] (mean)<br/>
+          </td></tr></table><br/>
+
+        <p><img src="top-comcache.png" width="901" height="215" title="top com cache" alt="top com cache" /></p>
+       </section>
+
+        <section>
+          <h2>Dúvidas que surgem quando colocamos cache...</h2>
+          <ul>
+            <li class="fragment">Meus dados não estão sendo atualizados! (Purge neles!)</li><br/>
+            <li class="fragment">Tenho várias versões de páginas, como fazer cache diferente? (Cookie é bom!)</li><br/>
+            <li class="fragment">Minha administração parou de funcionar! (Nunca faça cache da administração!)</li><br/>
+            <li class="fragment">Como devo cachear meu site? (Não sei, você tem que conhecer o seu site! Estude-o!)</li><br/>
+          </ul>
+        </section>
+      </section>
+
+      <section>
+        <h1>Obrigado! :)</h1>
+        <p><img src="wordpress-logo-hoz-rgb.png" width="498" height="113" title="WordPress" alt="WordPress" style="background-color: #ffffff; padding: 10px;" /></p>
+
+        <p><small>Por <a href="http://www.devin.com.br">Hugo Cisneiros</a> | <a href="http://www.devin.com.br">http://www.devin.com.br</a></small></p>
+      </section>
+
+
+    </div>
+  </div>
+
+  <script src="../reveal.js/lib/js/head.min.js"></script>
+  <script src="../reveal.js/js/reveal.min.js"></script>
+
+  <script>
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+      controls: true,
+      progress: true,
+      history: true,
+      center: true,
+
+      theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+      transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+      // Optional libraries used to extend on reveal.js
+      dependencies: [
+        { src: '../reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+        { src: '../reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: '../reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+        { src: '../reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+        { src: '../reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+        // { src: '../reveal.js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+        // { src: '../reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+      ]
+    });
+  </script>
+
+  </body>
+</html>
