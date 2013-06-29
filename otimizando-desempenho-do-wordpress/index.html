@@ -54,6 +54,7 @@
             <li class="fragment">"Meu site não tem muitos acessos..."</li><br/>
             <li class="fragment">Faço amanhã!</li><br/>
           </ul>
+          <p><img src="developer.gif" width="497" height="287" title="developer" alt="developer" /></p>
         </section>
       </section>
 
@@ -69,12 +70,14 @@
         </section>
         <section data-state="alert">
           <h1>Tenso né?</h1>
+          <p><img src="tenso.gif" width="499" height="374" title="tenso" alt="tenso" /></p>
         </section>
       </section>
 
       <section>
         <h1>Desempenho?</h1><br/>
         <h3>Nosso objetivo: carregar a página o mais rápido possível e para o maior número de pessoas possíveis ao mesmo tempo.</h3>
+        <p><img src="stress-test.gif" width="500" height="272" title="stress test" alt="stress test" /></p>
       </section>
 
       <section>
@@ -107,7 +110,15 @@
 
       <section>
         <section>
+          <h2>Item 0: Não existe receita de bolo, nem fazer apenas uma vez</h2>
+          <p><img src="tunning.gif" width="347" height="295" title="tunning" alt="tunning" /></p>
+        </section>
+      </section>
+
+      <section>
+        <section>
           <h2>Item 1: Armazenamento</h2>
+          <p><img src="armazenamento.gif" width="360" height="312" title="armazenamento" alt="armazenamento" /></p>
         </section>
           
         <section>
@@ -130,6 +141,7 @@
       <section>
         <section>
           <h2>Item 2: PHP e Servidor Web</h2>
+          <p><img src="webserver.gif" width="499" height="244" title="webserver" alt="webserver" /></p>
         </section>
           
         <section>
@@ -191,7 +203,7 @@
           <ul>
             <li>Redirects podem e devem ser feitos via Redirect ou Rewrite do servidor, não pelo WordPress;</li><br/>
             <li>Itens estáticos devem ser servidos sempre sem PHP. Pode até ser em um servidor separado (imagens, javascript/css);</li><br/>
-            <li>Se a cada requisição você gera uma lista dinâmica, considere gerar uma lista de tempos em tempos (exemplo: imagens upload de um wordpress multi-site);</li>
+            <li>Se a cada requisição você gera uma lista dinâmica, considere gerar uma lista de tempos em tempos (exemplo: imagens upload de um wordpress network);</li>
           </ul>
         </section>
       </section>
@@ -199,6 +211,7 @@
       <section>
         <section>
           <h2>Item 3: Servidor MySQL</h2>
+          <p><img src="banco.gif" width="500" height="224" title="banco" alt="banco" /></p>
         </section>
 
         <section>
@@ -233,7 +246,8 @@
         <section>
           <h2>Item 4: Cache</h2>
           <br/><br/>
-          <h1>O mais importante de todos!</h1>
+          <h2>O mais importante de todos!</h2>
+          <p><img src="cache.gif" width="500" height="310" title="cache" alt="cache" /></p>
         </section>
 
         <section>
@@ -329,22 +343,50 @@ Time per request: 8.010 [ms] (mean)<br/>
         <p><img src="top-comcache.png" width="901" height="215" title="top com cache" alt="top com cache" /></p>
        </section>
 
+        <section data-state="soothe">
+          <h2>Aí sim!</h2>
+          <p><img src="varnish.gif" width="320" height="240" title="varnish" alt="varnish" /></p>
+       </section>
+
+        <section>
+          <h2>Exceções</h2>
+          <ul>
+            <li class="fragment">Cookies sempre mudam de usuário para usuário;</li><br/>
+            <li class="fragment">Autenticação e usuários logados;</li><br/>
+            <li class="fragment">Query strings aleatórias NÃO! (wp_once?)</li><br/>
+          </ul>
+        </section>
+
         <section>
           <h2>Dúvidas que surgem quando colocamos cache...</h2>
           <ul>
             <li class="fragment">Meus dados não estão sendo atualizados! (Purge neles!)</li><br/>
             <li class="fragment">Tenho várias versões de páginas, como fazer cache diferente? (Cookie é bom!)</li><br/>
-            <li class="fragment">Minha administração parou de funcionar! (Nunca faça cache da administração!)</li><br/>
+            <li class="fragment">Minha administração parou de funcionar direito! (Nunca faça cache da administração!)</li><br/>
             <li class="fragment">Como devo cachear meu site? (Não sei, você tem que conhecer o seu site! Estude-o!)</li><br/>
           </ul>
         </section>
+
+      </section>
+
+      <section>
+        <h2>Quando tudo fica pronto...</h2>
+        <p><img src="beautiful.gif" width="500" height="281" title="beautiful" alt="beautiful" /></p>
+      </section>
+
+      <section>
+        <h2>E seus clientes e desenvolvedores...</h2>
+        <p><img src="clientes.gif" width="480" height="340" title="clientes" alt="clientes" /></p>
       </section>
 
       <section>
         <h1>Obrigado! :)</h1>
         <p><img src="wordpress-logo-hoz-rgb.png" width="498" height="113" title="WordPress" alt="WordPress" style="background-color: #ffffff; padding: 10px;" /></p>
 
-        <p><small>Por <a href="http://www.devin.com.br">Hugo Cisneiros</a> | <a href="http://www.devin.com.br">http://www.devin.com.br</a></small></p>
+        <p>
+          <small>Por <a href="http://www.devin.com.br">Hugo Cisneiros</a> | <a href="http://www.devin.com.br">http://www.devin.com.br</a></small><br/>
+          <small>Gifs divertosas tiradas do <a href="http://devopsreactions.tumblr.com/">DevOps Reactions</a></small>
+        </p>
       </section>
 
 
