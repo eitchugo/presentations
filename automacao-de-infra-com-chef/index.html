@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title>Automação de Infra com chef</title>
+
+    <meta name="description" content="Como automatizar a configuração e deploys de Infra com WordPress">
+    <meta name="author" content="Hugo Cisneiros (Eitch)">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="../reveal.js/css/reveal.min.css">
+    <link rel="stylesheet" href="../reveal.js/css/theme/default.css" id="theme">
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="../reveal.js/lib/css/zenburn.css">
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+      document.write( '<link rel="stylesheet" href="../reveal.js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+    </script>
+
+    <!--[if lt IE 9]>
+      <script src="../reveal.js/lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+  <div class="reveal">
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+
+      <section>
+        <h1>Automação de Infra</h1>
+        <p>com</p>
+        <p><img src="opscode-chef.png" width="380" height="300" title="Opscode chef" alt="Opscode chef" style="background-color: #ffffff; padding: 10px;" /></p>
+
+        <p>
+          <small>Por <a href="http://www.devin.com.br">Hugo Cisneiros</a> | <a href="http://www.devin.com.br">http://www.devin.com.br</a></small><br/>
+          <small>Movile | <a href="http://www.movile.com">www.movile.com</a></small>
+        </p>
+      </section>
+
+      <section>
+        <section data-state="soothe">
+          <h2>Infraestrutura<br/>Um programa que tem que dar certo</h2>
+          <img src="infra-errors.gif" width="270" height="223" alt="infra errors" title="infra errors" />
+          <p>Podemos considerar a infra como um código! Mas como?</p>
+        </section>
+        <section data-state="soothe">
+          <h2>Começa simples</h2>
+          <ul>
+            <li class="fragment">Algumas máquinas rodam alguns sistemas isolados</li><br/>
+            <li class="fragment">Um sysadmin pra gerenciar tudo</li><br/>
+            <li class="fragment">Poucos serviços e scripts de manutenção</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Vai crescendo...</h2>
+          <ul>
+            <li class="fragment">Muitas máquinas e serviços diferentes, começa a surgir a palavra <strong>padrão</strong></li><br/>
+            <li class="fragment">Uma equipe de sysadmins</li><br/>
+            <li class="fragment">Legados e sistemas novos convivendo juntos</li><br/>
+          </ul>
+        </section>
+        <section data-state="alert">
+          <h2>Se torna um monstro!</h2>
+          <ul>
+            <li class="fragment">Centenas ou milhares de servidores, vários serviços entrelaçados</li><br/>
+            <li class="fragment">Muitos sysadmins e DevOps em diversos setores, cada um pensando de um jeito</li><br/>
+            <li class="fragment">Dezenas de <em>padrões</em> diferentes O_o</li>
+          </ul>
+        </section>
+        <section data-state="alert">
+          <h2>Quando você se dá conta:</h2>
+          <p>
+            <img src="messy-oss.gif" width="600" height="424" alt="messy oss" title="messy oss" style="background-color: #ffffff; padding: 10px;" />
+            <img src="messy-infra.gif" width="300" height="236" alt="messy infra" title="messy infra" />
+          </p>
+        </section>
+      </section>
+
+      <section data-state="soothe">
+        <h1>Por que não fazer da<br/><br/>sua Infra um código?</h1>
+      </section>
+
+      <section>
+        <section>
+          <h2>Opscode chef</h2>
+          <ul>
+            <li>Sua infraestrutura vira código (Ruby), inclusive com versionamento (git)</li><br/>
+            <li>Você pode definir padrões de código assim como em um sistema</li><br/>
+            <li>Alguns usuários conhecidos: Amazon, Facebook, IGN, Mercado Livre, Splunk, Dreamhost</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>1 - Gerenciamento de configuração</h2>
+          <ul>
+            <li>Como os serviços são configurados (sim, os arquivos de configuração)</li><br/>
+            <li>Configurações são definidas e versionadas, colocadas nas máquinas sempre</li><br/>
+            <li>Se alterações locais são feitas, o chef sobrescreve com a versionada novamente</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>2 - Gerenciamento de cloud</h2>
+          <ul>
+            <li>Com configurações e serviços já definidos, coloca-se e retira-se máquinas automaticamente</li><br/>
+            <li>O chef se integra com as principais clouds públcias (e frameworks privados)</li><br/>
+            <li><em>Infraestrutura repetitiva</em></li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>3 - Entrega contínua</h2>
+          <ul>
+            <li>Com a infraestrutura e deploys já definidos, pode-se automatizar os deploys</li><br/>
+            <li>Como os deploys são padronizados, equipes de desenvolvimento podem mudar versões e o pacote vai automaticamente</li><br/>
+            <li>Com a lógica de infra do sistema, pode-se pesquisar quem roda o que e onde</li><br/>
+            <li>Com o versionamento, pode-se saber quais modificações foram feitas, quando e por quem</li>
+          </ul>
+        </section>
+
+        <section data-state="soothe">
+          <h2>Automação de Infra é isso</h2>
+          <p><img src="hypnosis.gif" width="497" height="373" alt="hypnosis" title="hypnosis" /></p>
+        </section>
+      </section>
+
+      <section>
+        <section data-state="alert">
+          <h1>Atenção!</h1>
+          <p>Nem tudo são flores! Você não vai resolver todos os problemas da sua infraestrutura como se fosse mágica!</p>
+          <p><img src="tenso.gif" width="499" height="374" title="tenso" alt="tenso" /></p>
+        </section>
+
+        <section data-state="alert">
+          <h2>Problemas com códigos</h2>
+          <ul>
+            <li>Uma boa curva de aprendizado para codificar sua infraestrutura</li><br/>
+            <li>Diferentes pessoas podem fazer diferentes códigos e lógicas</li><br/>
+            <li>Uma modificação BUGOSA feita na automação pode espalhar o bug em toda a infra</li><br/>
+          </ul> 
+        </section>
+
+        <section data-state="alert">
+          <h2>Escalonamento</h2>
+          <ul>
+            <li>Código (e infra) pode ficar complexo demais ao escalonar</li><br/>
+            <li>É preciso saber o que fazer na automação e o que fazer fora dela</li><br/>
+          </ul> 
+        </section>
+      </section>
+
+      <section>
+        <p><img src="how-chef-works.jpg" width="850" height="875" title="Opscode chef" alt="Opscode chef" style="background-color: #ffffff; padding: 10px;" /></p>
+      </section>
+
+      <section>
+        <section data-state="soothe">
+          <h1>Mas chega de brincadeiras!</h1>
+          <p><img src="batmanrobin-run.gif" width="500" height="269" title="batmanrobin-run" alt="batmanrobin-run" /></p>
+          <p>Mão na massa!</p>
+        </section>
+      </section>
+
+      <section>
+        <section>
+          <h1>Instalação</h1><br/><br/>
+          <p><img src="homer-cornflakes.gif" width="240" height="192" title="homer corn flakes" alt="homer corn flakes" /></p>
+        </section>
+
+        <section>
+          <h2>Instalação</h2>
+          <ul>
+            <li>A partir do 11.x, pacotes auto-contidos para as principais distribuições</li><br/>
+            <li>Instalação fácil, colocada no <em>/opt/chef</em> e <em>/opt/chef-server</em>.</li><br/>
+          </ul> 
+        </section>
+      </section>
+
+      <section>
+        <section>
+          <h1>Configurações</h1><br/><br/>
+          <p><img src="vader-bowling.gif" width="250" height="213" title="homer corn flakes" alt="homer corn flakes" /></p>
+        </section>
+
+        <section>
+          <h2>Configurações do repositório</h2>
+          <ul>
+            <li>Criamos um novo repositório git ou clonamos o da opscode</li><br/>
+            <li>Esse passo não é necessário mas extremamente recomendável para se ter controle do código</li><br/>
+          </ul> 
+        </section>
+
+        <section>
+          <h2>Configurações dos usuários</h2>
+          <ul>
+            <li>Podemos configurar um novo usuário via knife: knife configure -i</li><br/>
+            <li>Ou por WebUI, no servidor do chef, porta 443. O WebUI nada mais é que um front-end Web para a API</li><br/>
+            <li>Com o usuário criado, vários comandos do knife se tornam disponíveis (veremos depois)</li>
+          </ul> 
+        </section>
+
+        <section>
+          <h2>Configurações dos nós/clientes</h2>
+          <ul>
+            <li>Copiamos o chef-validator.pem (chave privada) do servidor</li><br/>
+            <li>Rodamos o comando <em>chef-client</em>, especificando a <em>RunList</em></li><br/>
+          </ul> 
+        </section>
+
+      </section>
+
+      <section>
+        <section>
+          <h2>Livros de receitas (cookbooks)</h2>
+          <ul>
+            <li>É o conjunto de regras de negócio que você quer transmitir</li><br/>
+            <li>Contém exatamente o que o chef-client tem que verificar e executar na máquina</li><br/>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Atributos</h2>
+          <ul>
+            <li>São variáveis usadas dentro de um cookbook</li><br/>
+            <li>Especificam coisas que podem mudar: parâmetros de configuração, nomes de serviços e diretórios distintos entre várias distribuições, entre outros</li><br/>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Roles</h2>
+          <ul>
+            <li>Especificam o que uma máquina <em>será</em></li><br/>
+            <li>Podem conter um conjunto de cookbooks e outras roles, aplicadas à uma ou mais máquinas</li><br/>
+            <li>Exemplo: uma role <em>dynamic-webserver</em> pode conter os cookbooks: apache2, mysql, php5, python, tomcat.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h1>Criando um novo cookbook</h1>
+          <p><img src="create-cookbook.gif" width="281" height="288" title="create cookbook" alt="create cookbook" /></p>
+        </section>
+
+        <section>
+          <h1>Estudando outros cookbooks</h1><br/><br/>
+        </section>
+      </section>
+
+      <section>
+        <section>
+          <h2>A faca! O comando knife</h2>
+          <p><img src="knife.gif" width="500" height="281" title="knife" alt="knife" /></p>
+          <ul>
+            <li>O comando knife é extremamente poderoso e lida com toda a base de dados do chef</li><br/>
+          </ul>
+        </section>
+
+        <section>
+          <h2>A faca! O comando knife</h2>
+          <ul>
+            <li>Algumas coisas que ele faz: executa comandos em grupos de máquinas via ssh; lista e atualiza os cookbooks, nós, usuários, roles, ambientes, databags; mostra informações de inventário dos servidores; gerencia as runlists; gerencia tags; mostra status dos clientes/nós do chef</li><br/>
+          </ul>
+        </section>
+      </section>
+
+      <section>
+        <section data-state="soothe">
+          <h1>O melhor link</h1><br/>
+          <p>E o prêmio para melhor link vai para:</p>
+          <ul>
+            <li><a href="http://docs.opscode.com/chef/resources.html">Resources and Providers Reference</a></li>
+          </ul>
+        </section>
+
+        <section data-state="soothe">
+          <h2>Outros links</h2><br/>
+          <ul>
+            <li><a href="http://community.opscode.com/">Opscode Community - Cookbooks e ajuda</a></li>
+            <li><a href="http://docs.opscode.com/">All About Chef - Documentação</a></li>
+          </ul>
+        </section>
+      </section>
+
+      <section>
+        <section>
+          <h1>Dúvidas? Exemplos?</h1>
+          <p><img src="cat-nails.gif" width="500" height="281" title="cat nails" alt="cat nails" /></p>
+          <p>Podem judiar do palestrante!</p>
+        </section>
+      </section>
+
+      <section>
+        <h1>Obrigado! :)</h1>
+        <p><img src="opscode-chef.png" width="380" height="300" title="Opscode chef" alt="Opscode chef" style="background-color: #ffffff; padding: 10px;" /></p>
+        <p>
+          <small>Por <a href="http://www.devin.com.br">Hugo Cisneiros</a> | <a href="http://www.devin.com.br">http://www.devin.com.br</a></small><br/>
+          <small>Movile | <a href="http://www.movile.com">www.movile.com</a></small><br/>
+          <small>Gifs divertosas tiradas do <a href="http://devopsreactions.tumblr.com/">DevOps Reactions</a></small>
+        </p>
+      </section>
+
+
+    </div>
+  </div>
+
+  <script src="../reveal.js/lib/js/head.min.js"></script>
+  <script src="../reveal.js/js/reveal.min.js"></script>
+
+  <script>
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+      controls: true,
+      progress: true,
+      history: true,
+      center: true,
+
+      theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+      transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+      // Optional libraries used to extend on reveal.js
+      dependencies: [
+        { src: '../reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+        { src: '../reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: '../reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+        { src: '../reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+        { src: '../reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+        // { src: '../reveal.js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+        // { src: '../reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+      ]
+    });
+  </script>
+
+  </body>
+</html>
