@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title>Varnish: Fazendo seu site voar</title>
+
+    <meta name="description" content="Uma introdução ao Varnish">
+    <meta name="author" content="Hugo Cisneiros (Eitch)">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="../reveal.js/css/reveal.min.css">
+    <link rel="stylesheet" href="../reveal.js/css/theme/default.css" id="theme">
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="../reveal.js/lib/css/zenburn.css">
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+      document.write( '<link rel="stylesheet" href="../reveal.js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+    </script>
+
+    <!--[if lt IE 9]>
+      <script src="../reveal.js/lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+  <div class="reveal">
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+
+      <section>
+        <h1>Varnish: Fazendo seu site voar</h1>
+        <p><img src="varnish-cache.jpg" width="300" height="300" title="Varnish" alt="Varnish" style="background-color: #ffffff; padding: 10px;" /></p>
+        <p>
+          <small>Por <a href="http://www.devin.com.br">Hugo Cisneiros</a> | <a href="http://www.devin.com.br">http://www.devin.com.br</a></small><br/>
+          <small>Movile | <a href="http://www.movile.com">www.movile.com</a></small>
+        </p>
+      </section>
+
+      <section>
+        <section>
+          <h2>Seu site foi instalado, populado e está pronto. Está tudo lindo!</h2>
+          <br/>
+          <h1>Certo?</h1>
+        </section>
+        <section data-state="alert">
+          <h1>Errado!</h1>
+        </section>
+        <section data-state="alert">
+          <h2>Alguns problemas:</h2>
+          <ul>
+            <li class="fragment">Desenvolvedores acham que se funcionar na máquina deles, não há problemas...</li><br/>
+            <li class="fragment">"Meu site não tem muitos acessos..."</li><br/>
+            <li class="fragment">Faço amanhã!</li><br/>
+          </ul>
+          <p><img src="developer.gif" width="497" height="287" title="developer" alt="developer" /></p>
+        </section>
+      </section>
+
+      <section>
+        <section>
+          <h1>Desempenho?</h1>
+          <ul>
+            <li class="fragment">Ninguém gosta de site lento ou fora do ar.</li><br/>
+            <li class="fragment">Cada milisegundo importa pro usuário final. Pode não parecer muito, mas importa.</li><br/>
+            <li class="fragment">Google mensurou perda de 20% de tráfego em um aumento de 400ms.</li><br/>
+            <li class="fragment">Amazon mensurou perda de 1% de vendas em um aumento de 100ms.</li>
+          </ul><br/>
+        </section>
+        <section data-state="alert">
+          <h1>Tenso né?</h1>
+          <p><img src="tenso.gif" width="499" height="374" title="tenso" alt="tenso" /></p>
+        </section>
+      </section>
+
+      <section>
+        <h1>Desempenho?</h1><br/>
+        <h3>Nosso objetivo: carregar a página o mais rápido possível e para o maior número de pessoas possíveis ao mesmo tempo.</h3>
+        <p><img src="stress-test.gif" width="500" height="272" title="stress test" alt="stress test" /></p>
+      </section>
+
+      <section>
+        <h2>Tamanho da página e otimizações HTML</h2>
+        <p>Não vamos falar aqui sobre coisas como:</p><br/>
+        <ul>
+          <li>Tamanho das páginas;</li>
+          <li>Javascript e CSS unificados e minimizados;</li>
+          <li>Compressão de imagens;</li>
+          <li>Javascript não-bloqueador.</li>
+        </ul><br/><br/>
+        <p>Se desenvolvedores não sabem desses tópicos, procurem saber urgentemente!</p>
+      </section>
+
+      <section>
+        <section>
+          <h2>Conheça o Varnish</h2>
+          <p><img src="cache.gif" width="500" height="310" title="cache" alt="cache" /></p>
+          <ul>
+            <li>É um software livre que atua como camada intermediária entre o usuário e o servidor Web</li><br/>
+            <li>Ele pega uma página dinâmica e transforma em uma página estática, em memória</li>
+          </ul>
+        </section>
+
+        <section data-state="alert">
+          <h2>Exemplo simples, SEM cache</h2>
+
+          <table style="font-size: 24pt; line-height: 26pt; margin: 0 auto 0 auto"><tr><td>
+CPU: E7500 @ 2.93GHz<br/>
+3GB de RAM<br/>
+apache2 + mod_php<br/>
+mysql 5.5
+          </td><td>
+Concurrency Level: 50<br/>
+Time taken for tests: 217.099 seconds<br/>
+Complete requests: 932<br/>
+Requests per second: 4.29 [#/sec] (mean)<br/>
+Time per request: 11646.966 [ms] (mean)
+          </td></tr></table><br/>
+
+        <p><img src="top-semcache.png" width="854" height="232" title="top sem cache" alt="top sem cache" /></p>
+       </section>
+
+        <section data-state="soothe">
+          <h2>Exemplo simples, COM cache</h2>
+
+          <table style="font-size: 24pt; line-height: 26pt; margin: 0 auto 0 auto"><tr><td>
+CPU: E7500 @ 2.93GHz<br/>
+3GB de RAM<br/>
+apache2 + mod_php<br/>
+mysql 5.5
+          </td><td>
+Concurrency Level: 50<br/>
+Time taken for tests: 1.602 seconds<br/>
+Complete requests: 10000<br/>
+Requests per second: 6242.42 [#/sec] (mean)<br/>
+Time per request: 8.010 [ms] (mean)<br/>
+          </td></tr></table><br/>
+
+        <p><img src="top-comcache.png" width="901" height="215" title="top com cache" alt="top com cache" /></p>
+       </section>
+
+       <section data-state="soothe">
+         <h2>Aí sim!</h2>
+         <p><img src="varnish.gif" width="320" height="240" title="varnish" alt="varnish" /></p>
+       </section>
+      </section>
+ 
+      <section>
+        <section>
+          <h2>Como e quando fazer cache?</h2>
+          <ul>
+            <li>Mexer no servidor web, código, banco de dados, entre outros, melhora mas não faz milagres. <span class="fragment"><strong>Quem faz milagre é o cache</strong>.</span></li><br/>
+            <li class="fragment">Separe todos os itens estáticos (que podem ser vistos por todos os usuários <strong>igualmente</strong> e os dinâmicos (muda de usuário pra usuário);</li><br/>
+            <li class="fragment">Exemplo: <span class="fragment">Estático é o texto do post.</span> <span class="fragment">Dinâmico é a quantidade de visualizações do post.</span></li><br/>
+          </ul>
+        </section>
+
+        <section data-state="soothe">
+          <h2>Faça cache de tudo que for estático!</h3>
+          <ul>
+            <li>O cache permite que a página seja gerada apenas uma vez e servida para muitos;</li><br/>
+            <li>Há várias técnicas de cache: cache de objetos, de consultas ao banco, de código, de páginas no servidor web;</li><br/>
+            <li>Falaremos apenas de cache do lado do servidor.</li><br/>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Exceções</h2>
+          <ul>
+            <li class="fragment">Cookies sempre mudam de usuário para usuário;</li><br/>
+            <li class="fragment">Autenticação e usuários logados;</li><br/>
+            <li class="fragment">Query strings aleatórias NÃO!</li><br/>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Dúvidas que surgem quando colocamos cache...</h2>
+          <ul>
+            <li class="fragment">Meus dados não estão sendo atualizados! (Purge neles!)</li><br/>
+            <li class="fragment">Tenho várias versões de páginas, como fazer cache diferente? (Cookie é bom!)</li><br/>
+            <li class="fragment">Minha administração parou de funcionar direito! (Nunca faça cache da administração!)</li><br/>
+            <li class="fragment">Como devo cachear meu site? (Não sei, você tem que conhecer o seu site! Estude-o!)</li><br/>
+          </ul>
+        </section>
+      </section>
+
+      <section>
+        <section>
+          <h2>Demo: Instalação e configurações básicas</h2><br/><br/>
+          <p><img src="homer-cornflakes.gif" width="240" height="192" title="homer corn flakes" alt="homer corn flakes" /></p>
+        </section>
+
+        <section>
+          <h2>Checklist</h2><br/>
+          <ul>
+            <li>Backends</li>
+            <li>Balanceamento de backends</li>
+            <li>Escolhendo um backend</li>
+            <li>Tempo de cache</li>
+          </ul>
+        </section>
+      </section>
+
+      <section>
+        <h1>Obrigado! :)</h1>
+        <p><img src="varnish-cache.jpg" width="300" height="300" title="Varnish" alt="Varnish" style="background-color: #ffffff; padding: 10px;" /></p>
+        <p>
+          <small>Por <a href="http://www.devin.com.br">Hugo Cisneiros</a> | <a href="http://www.devin.com.br">http://www.devin.com.br</a></small><br/>
+          <small>Movile | <a href="http://www.movile.com">www.movile.com</a></small><br/>
+          <small>Gifs divertosas tiradas do <a href="http://devopsreactions.tumblr.com/">DevOps Reactions</a></small>
+        </p>
+      </section>
+
+
+    </div>
+  </div>
+
+  <script src="../reveal.js/lib/js/head.min.js"></script>
+  <script src="../reveal.js/js/reveal.min.js"></script>
+
+  <script>
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+      controls: true,
+      progress: true,
+      history: true,
+      center: true,
+
+      theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+      transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+      // Optional libraries used to extend on reveal.js
+      dependencies: [
+        { src: '../reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+        { src: '../reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: '../reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+        { src: '../reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+        { src: '../reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+        // { src: '../reveal.js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+        // { src: '../reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+      ]
+    });
+  </script>
+
+  </body>
+</html>
