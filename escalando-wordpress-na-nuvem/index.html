@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title>Escalando o WordPress na nuvem</title>
+
+    <meta name="description" content="Exemplo prático de como escalar o WordPress na Amazon Web Services">
+    <meta name="author" content="Hugo Cisneiros (Eitch)">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="../reveal.js/css/reveal.min.css">
+    <link rel="stylesheet" href="../reveal.js/css/theme/default.css" id="theme">
+    <link rel="stylesheet" href="style.css" id="presentation">
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="../reveal.js/lib/css/zenburn.css">
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+      document.write( '<link rel="stylesheet" href="../reveal.js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+    </script>
+
+    <!--[if lt IE 9]>
+      <script src="../reveal.js/lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+  <div class="reveal">
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+
+      <section>
+        <h1>Escalando o</h1>
+        <p><img src="wordpress-logo-hoz-rgb.png" width="498" height="113" title="WordPress" alt="WordPress" style="background-color: #ffffff; padding: 10px;" /></p>
+        <h1>na Nuvem</h1>
+
+        <p><small>Por <a href="http://www.devin.com.br">Hugo Cisneiros</a> | <a href="http://www.devin.com.br">http://www.devin.com.br</a><br/>Movile: <a href="http://www.movile.com">http://www.movile.com</a></small></p>
+      </section>
+
+      <section>
+        <section data-state="windows">
+          <h1>Por que nuvem?</h1>
+        </section>
+
+        <section data-state="broken-windows">
+          <h1>Por que nuvem?</h1>
+          <ul>
+            <li class="fragment">Na apresentação do ano passado, falei sobre desempenho....</li><br/>
+            <li class="fragment">Mesmo com muito desempenho, às vezes precisamos crescer rápido!</li><br/>
+            <li class="fragment">Com o WordPress na nuvem, podemos crescer horizontalmente.</li><br/>
+          </ul>
+        </section>
+      </section>
+
+      <section>
+        <section data-state="alert">
+          <h1>Atenção!</h2>
+          <br/>
+          <h2>Este é um guia rápido para escalar o WordPress na nuvem, mas cada caso é um caso!</h2>
+          <p><small>Uso aqui a Amazon Web Services (AWS), mas poderia ser aplicado em outros serviços.</small></p>
+          <p><img src="its_a_trap.gif" width="500" height="214" /></p>
+        </section>
+
+        <section data-state="alert">
+          <h2>Repito: Não existe receita de bolo!</h2>
+          <p><img src="tunning.gif" width="640" height="360" /></p>
+          <p><small>(Nem de pizza)</small></p>
+        </section>
+      </section>
+
+      <section data-state="thecloud">
+        <section>
+          <h2>Uma plataforma de nuvem</h2>
+          <ul>
+            <li class="fragment">Estamos em 2014, a computação é um recurso escalável...</li><br/>
+            <li class="fragment">Sem nos preocupar com hardware, crescemos horizontalmente: colocamos e tiramos servidores a qualquer momento, dependendo da necessidade.</li><br/>
+            <li class="fragment">Se uma máquina dá pau, é só trocar ela por outra.</li><br/>
+            <li class="fragment"><strong>Escalar na nuvem significa automatizar todo esse processo.</strong></li>
+          </ul><br/>
+        </section>
+
+        <section>
+          <h2>Usando a Amazon Web Services</h2>
+          <ul>
+            <li>Criaremos na AWS:</li><br/>
+            <ul>
+              <li>3 servidores de banco de dados (1 RDS Master, 2 Réplicas de leitura);</li><br/>
+              <li>2 ou mais servidores Linux com Varnish (Cache) e Web Server (WordPress);</li><br/>
+              <li>1 Load Balancer na frente dos servidores Linux;</li><br/>
+              <li>1 Auto Scaling Group para controlar a quantidade de servidores Linux</li><br/>
+              <li>1 armazenamento S3 para itens estáticos (p.ex.: imagens)</li>
+            </ul>
+          </ul><br/>
+        </section>
+
+        <section>
+          <h2>Resumindo:</h2><br/>
+          <p><img src="aws_diagram.png" width="736" height="318" /></p>
+        </section>
+
+        <section>
+          <h2>Resumindo:</h2><br/>
+          <p>Parece tudo lindo!</p>
+          <p><img src="fuckyeah.gif" width="500" height="450" /></p>
+        </section>
+
+        <section>
+          <h1>Mas mostre-me tudo!</h1><br/>
+          <p><img src="typing.gif" width="350" height="350" /></p>
+        </section>
+
+        <section>
+          <h2>Configurações no S3 ou um servidor qualquer</h2><br/>
+          <p>Em um S3, eu coloco as configurações e comandos que vou usar nos servidores. </p>
+          <ul>
+            <li class="fragment">Configurações do servidor web</li><br/>
+            <li class="fragment">Configurações do cache varnish</li><br/>
+            <li class="fragment">Script de deploy contínuo</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Quando um novo servidor inicia...</h2><br/>
+          <ul>
+            <li class="fragment">Ele executa os diversos comandos que pedi: instala, usa as configurações do S3...</li><br/>
+            <li class="fragment">O script de deploy é iniciado e o WordPress instalado</li><br/>
+            <li class="fragment">O health check do Load Balancer dá OK e ela começa a servir os usuários</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Se o servidor dá defeito...</h2><br/>
+          <ul>
+            <li class="fragment">Ele é retirado imediatamente do load balancer.</li><br/>
+            <li class="fragment">A gente destrói o servidor ao invés de tentar consertar e cria um novo.</li><br/>
+            <li class="fragment">O novo servidor entra no lugar como se nada tivesse acontecido.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>A melhor maneira de efetuar deploys e gerenciar a configuração!</h2><br/>
+          <h3>Use o Opscode CHEF!</h3>
+          <img src="automation.gif" width="320" height="175" />
+          <p>Ele te ajuda a mudar as configurações mais facilmente e mantê-las sincronizadas entre todos os servidores!</p>
+        </section>
+
+      </section>
+
+      <section data-state="wordpress">
+        <section>
+          <h2>Um pacote de WordPress já pronto</h2><br/>
+          <ul>
+            <li class="fragment">Crie uma máquina de "staging" e faça as modificações do WordPress necessárias nela.</li><br/>
+            <li class="fragment">Ao terminar, compacte em um arquivo .tar.gz e mande para o S3.</li><br/>
+            <li class="fragment">Atualize o arquivo de update e os servidores vão todos pegar o novo pacote!</li><br/>
+          </ul><br/>
+        </section>
+
+        <section data-state="alert">
+          <h1>Atenção!</h1>
+          <p>Você vai perder aquela "comodidade" de sair editando os arquivos diretamente nos servidores! ;)</p>
+          <p><img src="ahn.gif" width="432" height="227" /></p>
+        </section>
+
+        <section data-state="wordpressbad">
+          <h1>Alguns probleminhas dessa configuração</h1><br/>
+          <ul>
+            <li class="fragment"><strong>SESSÕES:</strong> Não vai poder usar, a não ser que você tenha um memcache na rede e colocá-las tudo por lá (uma ótima ideia!)</li><br/>
+            <li class="fragment"><strong>ARQUIVOS DE CACHE LOCAIS:</strong> Esqueçam deles! Se seu plugin faz isso, então ele não é facilmente escalável.</li><br/>
+          </ul>
+        </section>
+
+      </section>
+
+      <section data-state="wordpress">
+        <section>
+          <h2>O WordPress e o HyperDB</h2><br/>
+          <p>Lembra que tínhamos 3 servidores de banco de dados?</p><br/>
+          <p><strong>Pra que?</strong></p><br/>
+        </section>
+
+        <section>
+          <h2>O WordPress e o HyperDB</h2><br/>
+          <p>Com o HyperDB, configuramos um master para as escritas e todos os 3 para leitura:</p><br/>
+        </section>
+
+        <section>
+          <pre>
+// master apenas para escrever
+$wpdb-&gt;add_database(array(
+  'host'     =&gt; 'devin-demo-master.cjx43gsy2jq0.us-east-1.rds.amazonaws.com',
+  'user'     =&gt; 'devin',
+  'password' =&gt; 'abc123',
+  'name'     =&gt; 'devin',
+  'write'    =&gt; 1,
+  'read'     =&gt; 1,
+));
+ 
+// primeiro slave local
+$wpdb-&gt;add_database(array(
+  'host'     =&gt; 'devin-demo-slave1.cjx43gsy2jq0.us-east-1.rds.amazonaws.com',
+  'user'     =&gt; 'devin',
+  'password' =&gt; 'abc123',
+  'name'     =&gt; 'devin',
+  'write'    =&gt; 0,
+  'read'     =&gt; 1,
+));
+ 
+// segundo slave local
+$wpdb-&gt;add_database(array(
+  'host'     =&gt; 'devin-demo-slave2.cjx43gsy2jq0.us-east-1.rds.amazonaws.com',
+  'user'     =&gt; 'devin',
+  'password' =&gt; 'abc123',
+  'name'     =&gt; 'devin',
+  'write'    =&gt; 0,
+  'read'     =&gt; 1,
+));
+          </pre>
+        </section>
+
+        <section>
+          <h2>O WordPress e o HyperDB</h2><br/>
+          <p>Ou podemos separar um dos nós para ser funcionar apenas na busca:</p><br/>
+        </section>
+
+        <section>
+          <pre>
+// segundo slave local apenas para busca
+$wpdb-&gt;add_database(array(
+  'host'     =&gt; 'devin-demo-slave2.cjx43gsy2jq0.us-east-1.rds.amazonaws.com',
+  'user'     =&gt; 'devin',
+  'password' =&gt; 'abc123',
+  'name'     =&gt; 'devin',
+  'write'    =&gt; 0,
+  'read'     =&gt; 1,
+  'dataset'  =&gt; 'busca',
+));
+
+$wpdb-&gt;add_callback('choose_db_search');
+function choose_db_search() {
+  if (isset($_GET['s'])) {
+    return 'busca'; 
+  } 
+}
+          </pre>
+        </section>
+
+        <section data-state="wordpressbatima">
+          <h2>Ou até pra comer a tia do bátima!</h2><br/>
+          <pre>
+$wpdb-&gt;add_callback('tia_do_batima');
+function tia_do_batima($query) {
+  if (preg_match("/comer a tia do batima/i", $query) )
+    return 'mansao_wayne'; 
+}
+          </pre>
+        </section>
+
+        <section>
+          <h2>O WordPress e o HyperDB</h2><br/>
+          <p>Mais informações em:</p><br/>
+          <p><a href="http://www.devin.com.br/wordpress-hyperdb/">http://www.devin.com.br/wordpress-hyperdb/</a></p><br/>
+        </section>
+      </section>
+
+      <section data-state="w3totalcache">
+        <section>
+          <h2>Um plugin de CDN - W3 Total Cache</h2><br/>
+          <ul>
+            <li>Você controla o que vai pra um host externo, o plugin converte as URLs pra você;</li><br/>
+            <li>Nesse caso usamos um S3, mas pode ser qualquer outro lugar!</li><br/>
+            <li>Pode usar para upload de imagens, itens do tema, js e css do wordpress, entre outros;</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>CDN - Configuração Principal</h2><br/>
+          <p><img src="w3totalcache_cdn_option.png" width="546" height="402" /></p>
+        </section>
+
+        <section>
+          <h2>CDN - Configuração do S3</h2><br/>
+          <p><img src="w3totalcache_cdn_config.png" width="740" height="515" /></p>
+        </section>
+
+        <section data-state="magic">
+          <h2>Tchau pra trabalheira de manter sistemas de arquivos compartilhados!</h2></br>
+          <p><img src="magic.gif" width="350" height="321" /></p>
+        </section>
+      </section>
+
+<!--
+      <section>
+        <section data-state="cool">
+          <h3>SEM cache</h3>
+
+          <table style="font-size: 24pt; line-height: 26pt; margin: 0 auto 0 auto"><tr><td>
+CPU: E7500 @ 2.93GHz<br/>
+3GB de RAM<br/>
+apache2 + mod_php<br/>
+mysql 5.5
+          </td><td>
+Concurrency Level: 50<br/>
+Time taken for tests: 217.099 seconds<br/>
+Complete requests: 932<br/>
+Requests per second: 4.29 [#/sec] (mean)<br/>
+Time per request: 11646.966 [ms] (mean)
+          </td></tr></table><br/>
+
+          <h3>COM cache</h2>
+
+          <table style="font-size: 24pt; line-height: 26pt; margin: 0 auto 0 auto"><tr><td>
+CPU: E7500 @ 2.93GHz<br/>
+3GB de RAM<br/>
+apache2 + mod_php<br/>
+mysql 5.5
+          </td><td>
+Concurrency Level: 50<br/>
+Time taken for tests: 1.602 seconds<br/>
+Complete requests: 10000<br/>
+Requests per second: 6242.42 [#/sec] (mean)<br/>
+Time per request: 8.010 [ms] (mean)<br/>
+          </td></tr></table><br/>
+
+        </section>
+      </section>
+-->
+
+      <section data-state="thecloud">
+        <h1>Obrigado! :)</h1>
+        <p><img src="wordpress-logo-hoz-rgb.png" width="498" height="113" title="WordPress" alt="WordPress" style="background-color: #ffffff; padding: 10px;" /></p>
+
+        <p>
+          <small>Por <a href="http://www.devin.com.br">Hugo Cisneiros</a> | <a href="http://www.devin.com.br">http://www.devin.com.br</a><br/>Movile: <a href="http://www.movile.com">http://www.movile.com</a></small><br/><br/>
+          <small>Gifs divertosas tiradas do <a href="http://devopsreactions.tumblr.com/">DevOps Reactions</a> e <a href="http://securityreactions.tumblr.com/">InfoSec Reactions</a></small>
+        </p>
+      </section>
+
+
+    </div>
+  </div>
+
+  <script src="../reveal.js/lib/js/head.min.js"></script>
+  <script src="../reveal.js/js/reveal.min.js"></script>
+
+  <script>
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+      controls: true,
+      progress: true,
+      history: true,
+      center: true,
+
+      theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+      transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+      // Optional libraries used to extend on reveal.js
+      dependencies: [
+        { src: '../reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+        { src: '../reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: '../reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+        { src: '../reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+        { src: '../reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+        // { src: '../reveal.js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+        // { src: '../reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+      ]
+    });
+  </script>
+
+  </body>
+</html>

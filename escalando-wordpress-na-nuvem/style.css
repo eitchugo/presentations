@@ -1,0 +1,67 @@
+.windows .state-background {
+  background: url(windows.jpg);
+  background-size: cover;
+}
+
+.broken-windows .state-background {
+  background-image: url(broken_windows.jpg);
+  background-size: cover;
+}
+
+.broken-windows ul li {
+  background-color: rgba(255,255,255,0.9);
+  color: #000;
+}
+
+.clouds .state-background {
+  background-image: url(clouds.jpg);
+  background-size: cover;
+}
+
+.clouds h1 {
+  color: #22426f;
+}
+
+.clouds ol li {
+  background-color: rgba(255,255,255,0.8);
+  color: #22426f;
+  font-weight: bold;
+}
+
+.thecloud .state-background {
+  background: rgba(22,152,213,.6) url(goku_cloud.png) no-repeat fixed top right;
+}
+
+.wordpress .state-background {
+  background: rgba(22,152,213,.6) url(wordpress-logo-notext-rgb.png) no-repeat fixed top right;
+}
+
+.wordpress pre {
+  background: #fff;
+  color: #000;
+}
+
+.wordpress a, .thecloud a {
+  background-color: rgba(0,0,0,0.5);
+  color: #000;
+}
+
+.wordpressbad .state-background {
+  background: rgba(200,50,30,.6) url(ahn.gif) no-repeat fixed top right;
+}
+
+.wordpressbatima .state-background {
+  background: rgba(22,152,213,.6) url(curinga.jpg) no-repeat fixed top right;
+}
+
+.w3totalcache .state-background {
+  background: rgba(50,200,90,.4) url(w3totalcache.png) no-repeat fixed top right;
+}
+
+.magic .state-background {
+  background: rgba(219,27,231,.4);
+}
+
+.cool .state-background {
+  background: rgba(50,200,90,.4) url(legal.gif) no-repeat fixed top right;
+}
