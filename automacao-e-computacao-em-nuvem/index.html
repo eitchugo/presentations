@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title>Automação e computação em nuvem</title>
+
+    <meta name="description" content="O futuro já chegou faz algum tempo, você está nele?">
+    <meta name="author" content="Hugo Cisneiros (Eitch)">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="../reveal.js/css/reveal.min.css">
+    <link rel="stylesheet" href="../reveal.js/css/theme/default.css" id="theme">
+    <link rel="stylesheet" href="style.css" id="presentation">
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="../reveal.js/lib/css/zenburn.css">
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+      document.write( '<link rel="stylesheet" href="../reveal.js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+    </script>
+
+    <!--[if lt IE 9]>
+      <script src="../reveal.js/lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+  <div class="reveal">
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+
+      <section data-state="thecloud">
+        <h1>Automação e Computação em Nuvem</h1><br/><br/>
+        <h2>O futuro já chegou faz algum tempo, você está nele?</h2>
+
+        <p><small>Por <a href="http://www.devin.com.br">Hugo Cisneiros</a> | <a href="http://www.devin.com.br">http://www.devin.com.br</a><br/>Movile: <a href="http://www.movile.com">http://www.movile.com</a></small></p>
+      </section>
+
+      <section>
+        <section data-state="blue">
+          <h2>Sobre o autor</h2>
+          <ul>
+            <li>Trabalha com Linux há 18 anos - gosta tanto que tem até uma tatuagem do Tux</li><br/>
+            <li>Mexe com computação em nuvem há 5 anos</li><br/>
+            <li>Tem um histórico como administrador de sistemas, mas está sempre se informando sobre desenvolvimento também</li><br/>
+          </ul>
+        </section>
+
+        <section data-state="movile">
+          <h2>Sobre a Movile</h2>
+          <ul>
+            <li>Líder em desenvolvimento de plataformas de comércio e conteúdo móvel na América Latina</li><br/>
+            <li>11 escritórios e mais de 500 colaboradores globais</li><br/>
+            <p><img src="movile-products.png" width="800" height="338" alt="Movile Products" style="background-color: #ffffff; border: 0; margin: 0 auto 0 auto;" /></p>
+          </ul>
+        </section>
+      </section>
+
+      <section>
+        <section data-state="thecloud">
+          <h2>A nuvem...</h2>
+          <ul>
+            <li>Já está bem velhinha... A AWS, por exemplo, foi lançada oficialmente em 2008. Mas já existiam muitas outras <i>nuvens</i> antes</li><br/>
+            <li>Deixou infraestrutura mais prática e rápida para os SysAdmins</li><br/>
+            <li>Deixar uma máquina pronta para o uso antes poderia demorar horas ou dias, agora demora alguns minutos</li></br/>
+            <li>Automação se tornou necessária devido a essa velocidade</li></br/>
+          </ul>
+        </section>
+
+        <section data-state="thecloud">
+          <h2>Nuvens públicas e privadas</h2>
+          <ul>
+            <li>Hoje em dia é mais fácil contratar uma nuvem pública e utilizá-la para se obter um resultado mais rápido.</li><br/>
+            <li>Mas se sua infraestrutura é grande (por exemplo, a partir de 350 servidores), pode ser interessante criar a sua própria nuvem.</li><br/>
+            <li>Soluções de nuvens pública: AWS, Google Cloud, Rackspace, Azure, Digital Ocean, etc.</li><br/>
+            <li>Plataformas de nuvens: OpenStack, CloudStack, vCloud, OpenNebula, Eucalyptus, etc.</li><br/>
+          </ul>
+        </section>
+      </section>
+
+      <section>
+        <section data-state="thecloud">
+          <h1>Trabalhando com a nuvem</h1><br/>
+          <p>Existe uma grande diferença de conceitos entre antes e depois das nuvens elásticas. Esta diferença tem sido explicada com uma analogia bem legal: <strong>animais de estimação vs. gado</strong> (<i>pets vs. cattle</i>).</p>
+        </section>
+
+        <section data-state="pets">
+          <h2>Animais de estimação</h2><br/>
+          <ul class="fragment">
+            <li>Você cria do zero, prepara, reserva tempo...</li><br/>
+            <li>Tem nomes próprios, são únicos e bem cuidados, você se lembra e cuida bem deles</li><br/>
+            <li>Quando preciso, você aumenta seus recursos (mais comida, mais cpu e memória)</li><br/>
+          </ul>
+        </section>
+
+        <section data-state="cattle">
+          <h2>Gado</h2><br/>
+          <ul class="fragment">
+            <li>Não tem nomes, você só conta os números e pronto</li><br/>
+            <li>São praticamente todos iguais, então nenhum acaba sendo especial</li><br/>
+            <li>Se der algum defeito, você substitui. Se precisar de mais recursos, você coloca mais um</li><br/>
+          </ul>
+        </section>
+
+        <section data-state="thecloud">
+          <h2>Para infra e operação</h2>
+          <ul>
+            <li>Máquinas vão surgir e desaparecer e você nem percebeu</li><br/>
+            <li>Utilize ferramentas de infraestrutura como código, senão você se perde</li><br/>
+            <li>Gerencie um grupo de máquinas, e não apenas uma máquina</li><br/>
+            <li>Stateless!</li><br/>
+          </ul>
+        </section>
+
+        <section data-state="thecloud">
+          <h2>Para desenvolvimento</h2>
+          <ul>
+            <li>Desenvolva baseado em falhas: pense em como o sistema vai falhar, porque ele vai</li><br/>
+            <li>Use serviços especializados que se integram entre si para fazer algo maior (loosely coupled), com chamadas assíncronas</li><br/>
+            <li>Cresca sempre horizontalmente (sim, sistemas distribuídos são sempre mais difíceis de fazer)</li><br/>
+            <li>Stateless!</li><br/>
+          </ul>
+        </section>
+      </section>
+
+      <section>
+        <section data-state="devops">
+          <h2>DevOps é a moda há alguns anos</h2><br/>
+          <ul>
+            <li>É uma cultura, culturas são difíceis e mudam de acordo com o caso</li><br/>
+            <li>É sobre como infraestrutura e desenvolvimento trabalham juntos</li><br/>
+            <li>É parte da entrega contínua de aplicações, onde todo o processo deve ser automatizado</li><br/>
+            <li>É infraestrutura como código</li><br/>
+          </ul>
+          <br/>
+        </section>
+      </section>
+
+      <section>
+        <section data-state="automation">
+          <h2>Automatizar agora é obrigatório</h2>
+          <p>...a não ser que você ame o caos.</p><br/>
+          <img src="infra-errors.gif" width="270" height="223" alt="infra errors" title="infra errors" />
+        </section>
+
+        <section data-state="automation">
+          <h2>Começa simples</h2>
+          <ul>
+            <li>Algumas máquinas rodam alguns sistemas isolados</li><br/>
+            <li>Um SysAdmin pra gerencia tudo</li><br/>
+            <li>Poucos serviços e scripts de manutenção</li>
+          </ul>
+        </section>
+
+        <section data-state="automation">
+          <h2>Vai crescendo...</h2>
+          <ul>
+            <li>Muitas máquinas e serviços diferentes, começa a surgir a palavra <strong>padrão</strong></li><br/>
+            <li>Uma equipe de SysAdmins</li><br/>
+            <li>Legados e sistemas novos convivendo juntos</li><br/>
+          </ul>
+        </section>
+
+        <section data-state="automation">
+          <h2>Se torna um monstro!</h2>
+          <ul>
+            <li>Centenas ou milhares de servidores, vários serviços entrelaçados</li><br/>
+            <li>Muitos SysAdmins e DevOps em diversos setores, cada um pensando de um jeito</li><br/>
+            <li>Dezenas de <em>padrões</em> diferentes O_o</li>
+          </ul>
+        </section>
+
+        <section data-state="alert">
+          <h2>Quando você se dá conta:</h2>
+          <p>
+            <img src="messy-oss.gif" width="600" height="424" alt="messy oss" title="messy oss" style="background-color: #ffffff; padding: 10px;" />
+            <img src="messy-infra.gif" width="300" height="236" alt="messy infra" title="messy infra" style="vertical-align: top;" />
+          </p>
+        </section>
+      </section>
+
+      <section>
+        <section data-state="automation">
+          <h2>Ferramentas de automação</h2>
+          <img src="automation-tools.png" width="524" height="365" alt="automation tools" title="automation tools" style="padding: 10px;" />
+        </section>
+        
+        <section data-state="automation">
+          <h2>Exemplo de automação com chef</h2>
+          <pre><code data-trim class="ruby">
+template '/etc/resolv.conf' do
+  owner   'root'
+  group   'root'
+  mode    0644
+  source  'resolv.conf.erb'
+end
+          </code></pre>
+          <pre><code data-trim class="erb">
+search example.com
+nameserver &lt;%= node['datacenter']['primary_dns'] %&gt;
+nameserver &lt;%= node['datacenter']['secondary_dns'] %&gt;
+          </code></pre>
+          <p><small>O arquivo /etc/resolv.conf varia de acordo com datacenter</small></p>
+        </section>
+
+        <section data-state="automation">
+          <h2>Exemplo de automação com chef</h2>
+          <pre><code data-trim class="ruby">
+deploy_rpm 'myservice-application' do
+  version '1.8.3-2'
+  environment 'production'
+  notifies :restart, 'service[myservice-application]', :delayed
+end
+
+service 'myservice-application' do
+  supports :status =&gt; true, :restart =&gt; true
+  action [ :enable, :start ]
+end
+          </code></pre>
+          <p><small>Um exemplo de deploy de uma aplicação RPM em produção</small></p>
+        </section>
+      </section>
+
+      <section>
+        <section data-state="automation">
+          <h2>Formas de deploy com automação:</h2>
+          <h2>Gerenciador de configuração faz tudo</h2><br/>
+          <ul>
+            <li>Sobe-se uma máquina com sistema operacional básico</li><br/>
+            <li>O gerenciador de configuração instala e configura tudo, mantém rodando</li><br/>
+            <li>Mudanças são feitas na automação e replicadas automaticamente para todas as máquinas com o serviço</li>
+          </ul>
+        </section>
+
+        <section data-state="automation">
+          <h2>Formas de deploy com automação:</h2>
+          <h2>Cria-se imagens atualizadas com tudo configurado</h2><br/>
+          <ul>
+            <li>É a tendência, porém é mais difícil de fazer</li><br/>
+            <li>Sobe uma máquina, instala e configura com a automação, e salva essa máquina como uma imagem de OS (ou container) na nuvem. Essa imagem é usada para subir o serviço</li><br/>
+            <li>Quando alguma mudança é feita, faz-se o passo 2, descarta-se o container ou a máquina virtual inteira, colocando no lugar uma nova instância.</li>
+          </ul>
+        </section>
+
+      </section>
+
+      <section data-state="thecloud">
+        <section>
+          <h1>Fim da apresentação!</h1>
+          <h2>(e começo da sua jornada)</h2>
+          <p><img src="cat-nails.gif" width="500" height="281" title="cat nails" alt="cat nails" /></p>
+          <p>Dúvidas? Me alcancem no meu site e email! :)</p>
+          <p><small><a href="http://www.devin.com.br">http://www.devin.com.br</a> | hugo.cisneiros at gmail</small></p>
+        </section>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="../reveal.js/lib/js/head.min.js"></script>
+  <script src="../reveal.js/js/reveal.min.js"></script>
+
+  <script>
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+      controls: true,
+      progress: true,
+      history: true,
+      center: true,
+
+      theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+      transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+      // Optional libraries used to extend on reveal.js
+      dependencies: [
+        { src: '../reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+        { src: '../reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: '../reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+        { src: '../reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+        { src: '../reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+        // { src: '../reveal.js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+        // { src: '../reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+      ]
+    });
+  </script>
+
+  </body>
+</html>

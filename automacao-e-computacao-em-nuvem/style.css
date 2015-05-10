@@ -1,0 +1,105 @@
+.blue .state-background {
+  background: rgba(22,152,213,.6);
+}
+
+.movile .state-background {
+  background: #ffffff url(movile-logo.png) no-repeat fixed top right;
+}
+
+.movile ul li {
+  background-color: rgba(255,255,255,0.9);
+  color: #000;
+}
+
+.movile h2 {
+  color: #000000;
+}
+
+.thecloud .state-background {
+  background: rgba(22,152,213,.6) url(goku_cloud.png) no-repeat fixed top right;
+}
+
+.thecloud ul li, p {
+  background-color: rgba(255,255,255,0.8);
+  color: #22426f;
+}
+
+.pets .state-background {
+  background: #ffffff url(pets.jpg) no-repeat fixed center center;
+}
+
+.pets ul li {
+  background-color: rgba(255,255,255,0.9);
+  color: #000;
+}
+
+.pets h2 {
+  color: #000000;
+}
+
+.cattle .state-background {
+  background-image: url(cattle.jpg);                                                                                                                                 
+  background-size: cover;            
+}
+
+.cattle ul li {
+  background-color: rgba(255,255,255,0.9);
+  color: #000;
+}
+
+.cattle h2 {
+  color: #000000;
+  background-color: rgba(255,255,255,0.9);
+}
+
+.devops .state-background {
+  background: rgba(22,152,213,.6) url(omg-devops.png) no-repeat fixed top right;
+}
+
+.devops ul li {
+  background-color: rgba(255,255,255,0.8);
+  color: #22426f;
+}
+
+.automation .state-background {
+  background: rgba(22,152,213,.6) url(glados.png) no-repeat fixed top right;
+}
+
+.automation ul li {
+  background-color: rgba(255,255,255,0.8);
+  color: #22426f;
+}
+
+.wordpress .state-background {
+  background: rgba(22,152,213,.6) url(wordpress-logo-notext-rgb.png) no-repeat fixed top right;
+}
+
+.wordpress pre {
+  background: #fff;
+  color: #000;
+}
+
+.wordpress a, .thecloud a {
+  background-color: rgba(0,0,0,0.5);
+  color: #000;
+}
+
+.wordpressbad .state-background {
+  background: rgba(200,50,30,.6) url(ahn.gif) no-repeat fixed top right;
+}
+
+.wordpressbatima .state-background {
+  background: rgba(22,152,213,.6) url(curinga.jpg) no-repeat fixed top right;
+}
+
+.w3totalcache .state-background {
+  background: rgba(50,200,90,.4) url(w3totalcache.png) no-repeat fixed top right;
+}
+
+.magic .state-background {
+  background: rgba(219,27,231,.4);
+}
+
+.cool .state-background {
+  background: rgba(50,200,90,.4) url(legal.gif) no-repeat fixed top right;
+}
