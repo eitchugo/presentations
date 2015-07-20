@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title>Cassandra na Amazon Web Services</title>
+
+    <meta name="description" content="Cassandra na Amazon Web Services">
+    <meta name="author" content="Hugo Cisneiros (Eitch)">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="../reveal.js/css/reveal.min.css">
+    <link rel="stylesheet" href="../reveal.js/css/theme/moon.css" id="theme">
+    <link rel="stylesheet" href="style.css" id="presentation">
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="../reveal.js/lib/css/zenburn.css">
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+      document.write( '<link rel="stylesheet" href="../reveal.js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+    </script>
+
+    <!--[if lt IE 9]>
+      <script src="../reveal.js/lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+  <div class="reveal">
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+
+      <section>
+        <h1>Cassandra na AWS</h1><br/><br/>
+        <h2>Quem curte?</h2>
+
+        <p><small>Por <a href="http://www.devin.com.br">Hugo Cisneiros</a> | <a href="http://www.devin.com.br">http://www.devin.com.br</a><br/>Movile: <a href="http://www.movile.com">http://www.movile.com</a></small></p>
+      </section>
+
+      <section>
+        <section data-state="blue">
+          <h2>Sobre o autor</h2>
+          <ul>
+            <li>Trabalha com Linux há 18 anos - gosta tanto que tem até uma tatuagem do Tux</li><br/>
+            <li>Mexe com computação em nuvem há 5 anos</li><br/>
+            <li>Tem um histórico como administrador de sistemas, mas está sempre se informando sobre desenvolvimento também</li><br/>
+          </ul>
+        </section>
+
+        <section data-state="movile">
+          <h2>Sobre a Movile</h2>
+          <ul>
+            <li>Líder em desenvolvimento de plataformas de comércio e conteúdo móvel na América Latina, expandindo de forma agressiva no segmento de aplicativos e serviços O2O (Online2Offline).</li><br/>
+            <li>~700 colaboradores globais, 11 escritórios, 11ª Melhor Empresa para Trabalhar no Brasil (GPTW), 50 bilhões de transações por ano.</li><br/>
+            <p><img src="movile-products.png" width="800" height="338" alt="Movile Products" style="background-color: #ffffff; border: 0; margin: 0 auto 0 auto;" /></p>
+          </ul>
+        </section>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="../reveal.js/lib/js/head.min.js"></script>
+  <script src="../reveal.js/js/reveal.min.js"></script>
+
+  <script>
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+      controls: true,
+      progress: true,
+      history: true,
+      center: true,
+
+      theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+      transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+      // Optional libraries used to extend on reveal.js
+      dependencies: [
+        { src: '../reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+        { src: '../reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: '../reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+        { src: '../reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+        { src: '../reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+        // { src: '../reveal.js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+        // { src: '../reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+      ]
+    });
+  </script>
+
+  </body>
+</html>
