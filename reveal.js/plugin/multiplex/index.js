@@ -9,7 +9,7 @@ var staticDir	= express.static;
 io				= io.listen(app);
 
 var opts = {
-	port: process.env.PORT || 1948,
+	port: 1948,
 	baseDir : __dirname + '/../../'
 };
 
@@ -30,7 +30,6 @@ app.configure(function() {
 });
 
 app.get("/", function(req, res) {
-	res.writeHead(200, {'Content-Type': 'text/html'});
 	fs.createReadStream(opts.baseDir + '/index.html').pipe(res);
 });
 
