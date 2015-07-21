@@ -59,6 +59,420 @@
         </section>
       </section>
 
+      <section>
+        <section>
+          <h2>Breve história do Cassandra na Movile</h2><br/>
+          <ul>
+            <li>Em 2009, substituiu o RDBMS de billing pelo cassandra 0.6 (e alguns meses depois, o 0.7)</li><br/>
+            <li>Em 2012, cassandra 1.0.6 em modo cluster</li><br/>
+            <li>Em 2014, cluster cassandra 1.2 com automação e multi-datacenters</li>
+          </ul>
+        </section>
+
+        <section data-state="cassandra12-cluster">&nbsp;</section>
+
+        <section>
+          <h2>Em 2015, o que buscamos?</h2><br/>
+          <ul>
+            <li>Usar o cassandra em outras plataformas na Movile</li><br/>
+            <li>Utilizar em nuvem e de forma facilmente escalável</li><br/>
+            <li>Automatizar o máximo possível</li>
+          </ul>
+        </section>
+      </section>
+
+      <section>
+        <section data-state="cassandra">
+          <h2>Mais um cluster cassandra, agora na AWS</h2><br/>
+          <ul>
+            <li>Objetivo: substituir o PostgreSQL e DynamoDB na plataforma de BaaS (Backend as a Service), que cuida do backend para nossas apps: analytics, media tracking, monetization, user engagement, etc.</li>
+          </ul>
+        </section>
+
+        <section data-state="cassandra">
+          <h2>Por que?</h2><br/>
+          <ul>
+            <li>Toda plataforma/API está na AWS de forma automatizada e auto-escalável</li><br/>
+            <li>Garantir uma alta vazão em leitura e escritas</li><br/>
+            <li>Economizar dindin (talvez a principal razão? :P)</li>
+          </ul>
+        </section>
+
+        <section data-state="cassandra">
+          <h2>Como?</h2><br/>
+          <ul>
+            <li><i>Launch Configuration</i> subindo máquinas c3.2xlarge em um Auto Scaling Group</li><br/>
+            <li><i>Post-Data</i> roda a automação em chef</li><br/>
+            <li><i>Receita</i> formata os discos ephemerals em SSD, instala e configura o cassandra</li><br/>
+            <li>Cassandra descobre quem pertence ao cluster através de tags e entra no cluster</li><br/>
+          </ul>
+        </section>
+      </section>
+
+      <section>
+        <section data-state="aws">
+          <h2>Launch Configuration + User Data</h2><br/>
+          <pre><code data-trim class="bash">
+#!/bin/bash
+ 
+# Basename for this auto scaling group
+export SRV_NAME="dalek"
+export ROLE="cassandra-dalek"
+ 
+# runs autoscaling script
+curl -L https://server.example.com/autoscaling-cassandra.sh | bash
+          </code></pre>
+          <p>Dessa forma não precisamos ficar atualizando o user-data dos LCs toda hora.</p>
+        </section>
+
+        <section data-state="aws">
+          <h2>O que o script de autoscaling faz?</h2><br/>
+          <ul>
+            <li>Instala/atualiza o chef</li>
+            <li>Dá um nome amigável ao servidor (SRV_NAME + N)</li>
+            <li>Formata os discos ephemerals</li>
+            <li>Roda o chef-client com a role indicada (ROLE)</li> 
+          </ul>
+        </section>
+      </section>
+
+      <section>
+        <section data-state="automation">
+          <h2>Receita cassandra</h2><br/>
+          <ul>
+            <li>Contém todas as regras de negócio para nosso cluster</li><br/>
+            <li>Qualquer modificação de configuração ou versão é feita aqui</li><br/>
+            <li>Garante a integridade da configuração entre todas as máquinas do cluster</li><br/>
+            <li>Usa varios outros cookbooks/receitas do mesmo servidor chef</li>
+          </ul>
+        </section>
+
+        <section data-state="automation">
+          <p>Cria uma tag na propria maquina indicando que faz parte do cluster</p>
+          <pre><code data-trim class="ruby">
+# tags itself
+tag("cassandra::dalek")
+          </code></pre>
+        </section>
+
+        <section data-state="automation">
+          <p>Adiciona o ec2 hints para avisar que uma maquina dentro de uma VPC é AWS</p>
+          <pre><code data-trim class="ruby">
+# proper hints for ec2 vpc nodes
+node.default['ohai']['ec2_hints'] = true
+include_recipe 'ohai'
+          </code></pre><br/>
+          <p>Nunca habilitar swap (recomendação cassandra)</p>
+          <pre><code data-trim class="ruby">
+# just to be sure, we will disable swap attribute
+node.set['swap']['use-swap'] = false
+include_recipe 'swap'
+          </code></pre>
+        </section>
+
+        <section data-state="automation">
+          <p>RAID0 entre os dois discos ephemerals</p>
+          <pre><code data-trim class="ruby">
+# make sure raid0 is running
+mdadm "/dev/md0" do
+  action :create
+  devices [ "/dev/xvdb1", "/dev/xvdc1" ]
+  level 0
+end
+
+# make sure readahead is 128
+execute 'cassandra-dalek - raid0 read-ahead to 128' do
+  command 'blockdev --setra 128 /dev/md0'
+  not_if 'test $(blockdev --getra /dev/md0) -eq 128'
+end
+
+# make sure data partition is mounted
+mount '/cassandra-data' do
+  device 'cassandra-data'
+  device_type :label
+  fstype 'ext4'
+  options 'rw'
+end
+          </code></pre>
+        </section>
+
+        <section data-state="automation">
+          <p>Timezone (UTC) e data/hora correta</p>
+          <pre><code data-trim class="ruby">
+# make sure system is in default timezone
+include_recipe 'timezone-ii'
+
+# run ntpdate on chef run before installing anything
+node.default['base']['ntpdate_chef_run'] = true
+include_recipe 'base::ntpdate'
+          </code></pre>
+        </section>
+
+        <section data-state="automation">
+          <p>Java e JNA</p>
+          <pre><code data-trim class="ruby">
+include_recipe 'java::v8'
+include_recipe 'java::jna'
+          </code></pre><br/>
+          <p>Parâmetros sysctl</p>
+          <pre><code data-trim class="ruby">
+# setting proper sysctl values
+node.default['sysctl']['params']['vm.max_map_count'] = 131072
+include_recipe "sysctl"
+          </code></pre>
+        </section>
+
+        <section data-state="automation">
+          <p>Repositório e Instalação do cassandra</p>
+          <pre><code data-trim class="ruby">
+# includes cassandra repository
+include_recipe 'yum-cassandra-community'
+
+# installs main package
+package 'cassandra21' do
+  version '2.1.8-1'
+end
+
+package 'dsc21' do
+  version '2.1.8-1'
+end
+          </code></pre>
+        </section>
+
+        <section data-state="automation">
+          <p>Diretórios de dados/commitlog</p>
+          <pre><code data-trim class="ruby">
+# data directories
+[ 'data', 'commitlog', 'saved_caches'].each do |dir|
+  directory "/cassandra-data/#{dir}" do
+    owner 'cassandra'
+    group 'cassandra'
+    mode 0750
+  end
+end
+          </code></pre>
+        </section>
+
+        <section data-state="automation">
+          <p>Configurações do java para rodar o cassandra</p>
+          <pre><code data-trim class="ruby">
+# environment variables
+node.default['cassandra']['java']['max_heap_size'] = '8G'
+node.default['cassandra']['java']['heap_new_size'] = '800M'
+node.default['cassandra']['java']['gc_logging'] = true
+
+template "#{conf_dir}/cassandra-env.sh" do
+  owner 'cassandra'
+  group 'cassandra'
+  mode 0644
+  source 'cassandra-env.sh.erb'
+  notifies :restart, 'service[cassandra]', :delayed
+end
+          </code></pre>
+        </section>
+
+        <section data-state="automation">
+          <p>Auto-discover (TODO: migrar para Consul)</p>
+          <pre><code data-trim class="ruby">
+# determine seeds based on chef tags
+include_recipe "partial_search"
+
+# search for all instances, separates by rack (az)
+nodes = partial_search(:node, 'chef_environment:production AND tags:cassandra\:\:dalek',
+  :keys => {
+    :hostname => [ 'hostname' ],
+    :ipaddress => [ 'ipaddress' ],
+    :datacenter => ['datacenter'],
+    :rack => [ 'ec2', 'placement_availability_zone' ]
+  }
+).sort_by{ |c| c["hostname"] }
+
+seeds = Array.new
+racks = Mash.new
+
+nodes.each do |n|
+  if not racks[n['rack']]
+    racks[n['rack']] = Array.new
+  end
+  racks[n['rack']].push(n['ipaddress'])
+end
+
+# pick up first 2 nodes from each rack
+racks.each do |rack, n|
+  for i in 0..1
+    if n[i]
+      # tag this instance to be a seed
+      if n[i] == node['ipaddress']
+        tag('cassandra-seed')
+      else
+        untag('cassandra-seed')
+      end
+      # add it to the seed array
+      seeds.push(n[i])
+    end
+  end
+end
+          </code></pre>
+        </section>
+
+        <section data-state="automation">
+          <p>Configuração principal (com os seeds)</p>
+          <pre><code data-trim class="ruby">
+node.default['cassandra']['conf']['cluster_name'] = 'dalek'
+node.default['cassandra']['conf']['seeds'] = seeds
+
+# cassandra main configuration
+template "#{conf_dir}/cassandra.yaml" do
+  owner 'cassandra'
+  group 'cassandra'
+  mode 0644
+  source 'cassandra.yaml.erb'
+  notifies :restart, 'service[cassandra]', :delayed
+end
+          </code></pre>
+        </section>
+
+        <section data-state="automation">
+          <p>Usando os dados do auto-discover também no FileSnitch</p>
+          <pre><code data-trim class="ruby">
+# snitch
+template "#{conf_dir}/cassandra-rackdc.properties" do
+  owner 'cassandra'
+  group 'cassandra'
+  mode 0644
+  source 'cassandra-rackdc.properties.erb'
+  variables(
+    :dc => node['datacenter'] || 'amazonvpc-useast1',
+    :rack => node['ec2']['placement_availability_zone'][-1,1]
+  )
+  notifies :restart, 'service[cassandra]', :delayed
+end
+          </code></pre>
+        </section>
+
+        <section data-state="automation">
+          <p>Bootstrap base</p>
+          <pre><code data-trim class="ruby">
+# after everything is fine, bootstrap base role for the next chef run
+include_recipe 'bootstrap-base'
+          </code></pre>
+        </section>
+      </section>
+
+      <section>
+        <section data-state="automation">
+          <h2>Depois, quando a máquina entra:</h2><br/>
+          <ul>
+            <li>Executa role "base"</li><br/>
+            <li>Entra na monitoração, cria-se um nome de DNS (AWS Route53)</li><br/>
+          </ul>
+        </section>
+
+        <section data-state="automation">
+          <h2>(WIP) Quando a máquina sai:</h2><br/>
+          <ul>
+            <li>Um script de desligamento faz uma chamada em uma API</li><br/>
+            <li>O próprio servidor se dá um <i>decomission</i> no cassandra antes de desligar</li><br/>
+          </ul>
+        </section>
+
+        <section data-state="automation">
+          <h2>API de desligamento</h2><br/>
+          <ul>
+            <li>Usa: python, flask, boto. É RESTful.</li><br/>
+            <li>Toda chamada adiciona uma mensagem em uma fila SQS</li><br/>
+            <li>Em paralelo, um consumidor faz polling da fila e executa as ações</li><br/>
+            <li>A mensagem só é removida quando todas as ações são feitas</li>
+          </ul>
+        </section>
+
+        <section data-state="automation">
+          <h2>Ações da API</h2><br/>
+          <ul>
+            <li>Retira o servidor do chef (pronto)</li><br/>
+            <li>Retira o nome do Route 53 (wip)</li><br/>
+            <li>Retira o servidor da monitoração (wip)</li><br/>
+            <li>Outras regras assíncronas para matar o servidor</li>
+          </ul>
+        </section>
+
+        <section data-state="automation">
+          <h2>Exemplo de endpoints da API</h2><br/>
+          <table>
+            <thead>
+              <tr>
+                <th>Endpoint</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>GET /nodes</td>
+                <td>Get total node list from automation</td>
+              </tr>
+              <tr>
+                <td>POST /nodes</td>
+                <td>Create a new node</td>
+              </tr>
+              <tr>
+                <td>GET /node/:nodename</td>
+                <td>Get specific node information</td>
+              </tr>
+              <tr>
+                <td>DELETE /node/:nodename</td>
+                <td>Delete node nodename</td>
+              </tr>
+              <tr>
+                <td>PUT /node/:nodename</td>
+                <td>Update node nodename</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section data-state="automation">
+          <p>Exemplo de chamada DELETE do autoscale</p>
+          <pre><code data-trim class="ruby">
+[INFO] - Processing SQS event type TERMINATE: Terminating EC2 instance: i-83a48450, asg-minion
+[INFO] - Searching for instance-id i-83a48450 on chef
+[INFO] - Removing instance-id i-83a48450 on chef: minion9.example.com
+[INFO] - Deleting node object minion9.example.com from chef
+[INFO] - Deleted node object minion9.example.com from chef
+[INFO] - Deleting client object minion9.example.com from chef
+[INFO] - Deleted client object minion9.example.com from chef
+          </code></pre>
+        </section>
+
+      </section>
+
+      <section>
+        <section data-state="cassandra">
+          <h2>Problemas:</h2><br/>
+          <ul>
+            <li class="fragment">Servidores precisam subir/descer um de cada vez</li><br/>
+            <li class="fragment">Configurações do GC Java deram dor de cabeça</li><br/>
+            <li class="fragment">Versão do cassandra nova demais</li><br/>
+          </ul>
+        </section>
+
+        <section data-state="cassandra">
+          <h2>WIP</h2><br/>
+          <ul>
+            <li>Web Service orquestrador de repair</li><br/>
+            <li>Finalizar e abrir a API para todos</li><br/>
+          </ul>
+        </section>
+      </section>
+
+      <section data-state="blue">
+        <section>
+          <h1>Fim da apresentação!</h1>
+          <p><img src="cat-nails.gif" width="500" height="281" title="cat nails" alt="cat nails" /></p>
+          <p>Dúvidas? Me alcancem no meu site e email! :)</p>
+          <p><small><a href="http://www.devin.com.br">http://www.devin.com.br</a> | hugo.cisneiros at movile.com</small></p>
+        </section>
+      </section>
+
     </div>
   </div>
 
