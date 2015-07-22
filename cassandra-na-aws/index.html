@@ -102,8 +102,8 @@
           <h2>Como?</h2><br/>
           <ul>
             <li><i>Launch Configuration</i> subindo máquinas c3.2xlarge em um Auto Scaling Group</li><br/>
-            <li><i>Post-Data</i> roda a automação em chef</li><br/>
-            <li><i>Receita</i> formata os discos ephemerals em SSD, instala e configura o cassandra</li><br/>
+            <li><i>User-Data</i> roda a automação em chef</li><br/>
+            <li><i>Receita</i> formata os discos ephemerals SSD, instala e configura o cassandra</li><br/>
             <li>Cassandra descobre quem pertence ao cluster através de tags e entra no cluster</li><br/>
           </ul>
         </section>
@@ -140,7 +140,7 @@ curl -L https://server.example.com/autoscaling-cassandra.sh | bash
         <section data-state="automation">
           <h2>Receita cassandra</h2><br/>
           <ul>
-            <li>Contém todas as regras de negócio para nosso cluster</li><br/>
+            <li>Contém todas as regras de infraestrutura para nosso cluster</li><br/>
             <li>Qualquer modificação de configuração ou versão é feita aqui</li><br/>
             <li>Garante a integridade da configuração entre todas as máquinas do cluster</li><br/>
             <li>Usa varios outros cookbooks/receitas do mesmo servidor chef</li>
@@ -272,7 +272,7 @@ end
         </section>
 
         <section data-state="automation">
-          <p>Auto-discover (TODO: migrar para Consul)</p>
+          <p>Auto-discover (pensando em migrar para Consul)</p>
           <pre><code data-trim class="ruby">
 # determine seeds based on chef tags
 include_recipe "partial_search"
@@ -456,12 +456,23 @@ include_recipe 'bootstrap-base'
         </section>
 
         <section data-state="cassandra">
-          <h2>WIP</h2><br/>
+          <h2>Work In Progress</h2><br/>
           <ul>
-            <li>Web Service orquestrador de repair</li><br/>
-            <li>Finalizar e abrir a API para todos</li><br/>
+            <li>Orquestrador de repair (já fizemos um, mas queremos deixar mais genérico para autoscale)</li><br/>
+            <li>Finalizar e abrir a API</li><br/>
+            <li>Definir métricas melhores para ligar e desligar instâncias (isso é ouro)</li><br/>
           </ul>
         </section>
+
+        <section data-state="cassandra">
+          <h2>E alguns números</h2><br/>
+          <ul>
+            <li>Antes: 1k op/s read/write; Latência &lt;10ms;</li><br/>
+            <li>Depois: 200k op/s read/write; Latência &lt;5ms;</li><br/>
+            <li>Economia de custos: 300%</li><br/>
+          </ul>
+        </section>
+
       </section>
 
       <section data-state="blue">
