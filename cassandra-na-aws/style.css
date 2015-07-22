@@ -1,3 +1,7 @@
+.reveal a:not(.image) {
+  color: #ffffff;
+}
+
 .blue .state-background {
   background: rgba(22,152,213,.6);
 }
@@ -7,6 +11,10 @@
 }
 
 .blue ul li {
+  color: #ffffff;
+}
+
+.blue .reveal a {
   color: #ffffff;
 }
 
