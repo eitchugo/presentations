@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title>Self-Service Metrics: Um hype que já dura anos, mas que pode ter solução</title>
+
+    <meta name="description" content="Talk about many years of hype on self-service metrics and how can we solve it.">
+    <meta name="author" content="Hugo Cisneiros (Eitch)">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="../reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="../common/night-eitch.css" id="theme">
+    <!-- <link rel="stylesheet" href="style.css" id="presentation"> -->
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+            var link = document.createElement( 'link' );
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = window.location.search.match( /print-pdf/gi ) ? '../reveal.js/css/print/pdf.css' : '../reveal.js/css/print/paper.css';
+            document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+
+  </head>
+  <body>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <section>
+        <h1>Self-Service Metrics</h1><br/>
+        <p>Um <strong>hype</strong> que já dura anos...<br/>
+        ...mas que pode ter solução!</p><br/>
+
+        <p>
+          <small>Por Hugo Cisneiros | <a href="http://www.devin.com.br">http://www.devin.com.br</a><br/>
+          Movile: <a href="http://www.movile.com">http://www.movile.com</a></small>
+        </p>
+
+      </section>
+
+      <section>
+        <section>
+          <h1>Antes de tudo:</h1><br/>
+          <h1>o que é self-service metrics?</h1><br/>
+        </section>
+
+        <section>
+          <ul>
+            <li>Algum espertinho resolveu batizar métricas personalizadas de self-service metrics.<br/><br/></li>
+            <li>Alguém aí lembra da Web 2.0? Ninguém sabe definir direito ou exatamente o que é.<br/><br/></li>
+          </ul>
+          <p>Na minha interpretação: <strong>é um método onde é fácil colocar várias métricas (dados) sobre
+            qualquer coisa (softwares, negócios, estatísticas) e criar gráficos e dashboards
+            como quiser (pessoais).</strong></p>
+        </section>
+      </section>
+
+      <section>
+        <section>
+          <h1>Por que o <strong>hype</strong>?</h1><br/>
+          <p><img src="hype_train.jpg" alt="hype train" width="640" height="401" /></p>
+        </section>
+
+        <section>
+          <h2>Quem nunca ouviu falar da promessa de self-service metrics?</h2><br/>
+          <ul>
+            <li>Um painel <i>diabolicamente</i> completo que vai ter todas as informações que você quer;<br/><br/></li>
+            <li>Você poderá colocar todos os tipos de dados possíveis;<br/><br/></li>
+            <li>Dashboards fáceis de usar e lindos, belos, deliciosos;</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Começamos a fazer perguntas...</h2><br/>
+          <p>Como posso colocar minhas métricas nesse sistema?</p>
+          <p class="fragment"><strong>R: Instale essa biblioteca aqui, tome essa chave
+            de API (ou usuário e senha), aponte o servidor para o IP do <i>servidorsinistro</i>
+            na porta 23612437263, depois construa a estrutura de dados que mande todos os itens que você
+            quer pela biblioteca; mas antes você precisa informar todos os itens para o pessoal
+            de suporte configurar no sistema. Depois então configure um scheduler que fique
+            mandando essas informações sempre; Ah! Não esqueça também de pedir liberação pro
+            Massaranduba da segurança e a a bênção do Goku.
+            </strong></p>
+        </section>
+
+        <section>
+          <h2>E mais aquela perguntinha...</h2><br/>
+          <p>E com esses meus dados no sistema, como visualizá-los?</p>
+          <p class="fragment"><strong>R: Faça o download do programa MyIncredibleDashboard que só
+            funciona no Windows, ou acesse a versão Cloud que custa U$50 por métrica por mês por
+            usuário por servidor por aplicação por processador. Depois gaste horas lendo
+            guias e tutoriais de como fazer um Hello World inútil no dashboard e ainda ficar feio.
+            Ah, e se enjoar tem aquele dashboard feito em PHP que meu sobrinho fez e que
+            consulta o banco diretamente, fica muito lindo e personalizado.
+            </strong></p>
+        </section>
+
+         <section data-background="areyoufuckingkiddingme.jpg" data-background-repeat="repeat" data-background-size="500px">&nbsp;</section>
+      </section>
+
+      <section>
+        <section>
+          <h1>Meu caso na <img src="movile.png" alt="movile logo" width="246" height="70" style="vertical-align: bottom;" class="plain" /></h1><br/>
+          <ul>
+            <li>Estávamos migrando nosso monitoramento de Nagios para Zabbix;<br/><br/></li>
+            <li>Cada vez os dados do monitoramento ficavam importantes (não apenas de infraestrutura);<br/><br/></li>
+            <li>Dois colegas foram em Abril de 2016 para a Zabbix Conference LATAM.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h1>Eventos empolgam! Métricas pra tudo!</h1><br/>
+          <ul>
+            <li>Uma apresentação de <i>Marcio Propp</i> das Lojas Renner nos abriu os olhos;<br/><br/></li>
+            <li>Eles utilizavam o Zabbix não apenas para infraestrutura, mas para indicadores de negócios;<br/><br/></li>
+            <li>As pessoas lá pareciam ter algo parecido com o que chamamos de self-service metrics.<br/><br/></li>
+          </ul>
+        </section>
+
+        <section>
+          <h1>Surgiu o desafio</h1><br/>
+          <ul>
+            <li>Como vamos deixar fácil para todo mundo <strong>colocar os dados</strong>?<br/><br/></li>
+            <li>Como vamos deixar fácil, bonito e útil para <strong>visualizar esses dados</strong>?<br/><br/></li>
+            <li>Com tudo pronto, como fazemos para as pessoas começarem a usar?</li>
+          </ul>
+        </section>
+      </section>
+      <section>
+
+        <section>
+          <h1>Passo 1: <strong>Zabbix</strong></h1><br/>
+        </section>
+
+        <section>
+          <h1>Zabbix não apenas para alarmística</h1>
+          <ul>
+            <li>Serve como um agregador de dados e eventos;<br/><br/></li>
+            <li>A severidade <strong>Informational</strong> já começa a dizer tudo;<br/><br/></li>
+            <li><strong>API</strong> é muito útil para colocar dados programaticamente.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h1>Usuário e grupo específico para coleta de dados e modificação de templates</h1>
+          <ul>
+            <li>Por exemplo: usuário <strong>checkmetrics</strong>.<br/><br/></li>
+            <li>Grupo: <strong>checkmetrics</strong>.<br/><br/></li>
+            <li>Permissões: Read-write nos Templates necessários (Ex.: <strong>Template Metrics Sample</strong>)</li>
+          </ul>
+        </section>
+
+        <section>
+          <h1>Como usar?</h1>
+          <ul>
+            <li>Os templates podem estar em cada máquina de aplicação;<br/><br/></li>
+            <li>Ou podem ficar apenas em um host, que coleta todos os dados e agrega tudo em um lugar só.<br/><br/></li>
+            <li>Tenho a tendência em <strong>distribuir</strong> os templates em várias máquinas.</li>
+          </ul>
+        </section>
+
+        <section>
+          <p><img src="wecandoit.png" alt="We can't do it" width="500" height="633" /></p>
+        </section>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="../reveal.js/lib/js/head.min.js"></script>
+  <script src="../reveal.js/js/reveal.js"></script>
+
+  <script>
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+      controls: true,
+      progress: true,
+      history: true,
+      center: true,
+
+      theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+      transition: Reveal.getQueryHash().transition || 'slide',
+
+      // Optional libraries used to extend on reveal.js
+      dependencies: [
+        { src: '../reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+        { src: '../reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: '../reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+        { src: '../reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+        { src: '../reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+        // { src: '../reveal.js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+        // { src: '../reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+      ]
+    });
+  </script>
+
+  </body>
+</html>

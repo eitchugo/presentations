@@ -1,0 +1,49 @@
+.blue .state-background {
+  background: rgba(22,152,213,.6);
+}
+
+.blue h2 {
+  color: #ffffff;
+}
+
+.blue ul li {
+  color: #ffffff;
+}
+
+.blue .reveal a {
+  color: #ffffff;
+}
+
+.white .state-background {
+  background: #ffffff;
+}
+
+.movile .state-background {
+  background: #ffffff url(movile-logo.png) no-repeat fixed top right;
+}
+
+.movile ul li, .white ul li {
+  background-color: rgba(255,255,255,0.9);
+  color: #000;
+  font-size: 90%;
+}
+
+.movile h2, .white h2 {
+  color: #000000;
+}
+
+.cassandra12-cluster .state-background {
+  background: #ffffff url(cassandra12-cluster.jpg) no-repeat fixed top center;
+}
+
+.cassandra .state-background {
+  background: url(cassandra-logo.png) no-repeat fixed top right;
+}
+
+.aws .state-background {
+  background: url(aws.png) no-repeat fixed top right;
+}
+
+.automation .state-background {
+  background: url(glados.png) no-repeat fixed top right;
+}
