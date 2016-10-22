@@ -77,7 +77,7 @@
           <ul>
             <li>Um painel <i>diabolicamente</i> completo que vai ter todas as informações que você quer;<br/><br/></li>
             <li>Você poderá colocar todos os tipos de dados possíveis;<br/><br/></li>
-            <li>Dashboards fáceis de usar e lindos, belos, deliciosos;</li>
+            <li>Dashboards fáceis de usar, lindos, belos e deliciosos;</li>
           </ul>
         </section>
 
@@ -113,8 +113,9 @@
         <section>
           <h1>Meu caso na <img src="movile.png" alt="movile logo" width="246" height="70" style="vertical-align: bottom;" class="plain" /></h1><br/>
           <ul>
-            <li>Estávamos migrando nosso monitoramento de Nagios para Zabbix;<br/><br/></li>
+            <li>Estávamos migrando nosso monitoramento de Nagios para <strong>Zabbix</strong>;<br/><br/></li>
             <li>Cada vez os dados do monitoramento ficavam importantes (não apenas de infraestrutura);<br/><br/></li>
+            <li>Muitas métricas de software estavam sendo armazenados no <strong>graphite</strong>.<br/><br/></li>
             <li>Dois colegas foram em Abril de 2016 para a Zabbix Conference LATAM.</li>
           </ul>
         </section>
@@ -123,8 +124,9 @@
           <h1>Eventos empolgam! Métricas pra tudo!</h1><br/>
           <ul>
             <li>Uma apresentação de <i>Marcio Propp</i> das Lojas Renner nos abriu os olhos;<br/><br/></li>
-            <li>Eles utilizavam o Zabbix não apenas para infraestrutura, mas para indicadores de negócios;<br/><br/></li>
-            <li>As pessoas lá pareciam ter algo parecido com o que chamamos de self-service metrics.<br/><br/></li>
+            <li>Eles utilizavam o Zabbix não apenas para infraestrutura, mas para <strong>indicadores de negócios</strong>;<br/><br/></li>
+            <li>As pessoas lá pareciam ter algo parecido com o que chamamos de <strong>self-service metrics</strong>.<br/><br/></li>
+            <li>Mas por que que <strong>ninguém fala</strong> como fazem isso exatamente?<br/><br/></li>
           </ul>
         </section>
 
@@ -140,21 +142,22 @@
       <section>
 
         <section>
-          <h1>Passo 1: <strong>Zabbix</strong></h1><br/>
-          <p>TODO: img</p>
+          <h1>Passo 1: </h1><br/>
+          <p><img src="zabbix.png" alt="Zabbix" width="600" height="147" /></p>
         </section>
 
         <section>
-          <h1>Zabbix não apenas para alarmística</h1>
+          <h1><strong>Zabbix</strong> não apenas para alarmística</h1><br/>
           <ul>
             <li>Serve como um agregador de dados e eventos;<br/><br/></li>
             <li>A severidade <strong>Informational</strong> já começa a dizer tudo;<br/><br/></li>
-            <li><strong>API</strong> é muito útil para colocar dados programaticamente.</li>
+            <li><strong>API</strong> é muito útil para colocar dados programaticamente;<br/><br/></li>
+            <li>Sim, eu sei que existem outras soluções (elasticsearch, graphite, etc)... Mas foi essa que escolhemos.</li>
           </ul>
         </section>
 
         <section>
-          <h1>Usuário e grupo específico para coleta de dados e modificação de templates</h1>
+          <h1>Usuário e grupo específico para coleta de dados e modificação de templates</h1><br/>
           <ul>
             <li>Por exemplo: usuário <strong>checkmetrics</strong>.<br/><br/></li>
             <li>Grupo: <strong>checkmetrics</strong>.<br/><br/></li>
@@ -163,7 +166,7 @@
         </section>
 
         <section>
-          <h1>Como usar?</h1>
+          <h1>Como usar?</h1><br/>
           <ul>
             <li>Os templates podem estar em cada máquina de aplicação;<br/><br/></li>
             <li>Ou podem ficar apenas em um host, que coleta todos os dados e agrega tudo em um lugar só.<br/><br/></li>
@@ -172,14 +175,14 @@
         </section>
 
         <section>
-          <p><img src="wecandoit.png" alt="We can't do it" width="500" height="633" /></p>
+          <p><img src="wecandoit.png" alt="We can do it" width="500" height="633" /></p>
         </section>
       </section>
 
       <section>
         <section>
           <h1>Passo 2: Coletando as <strong>métricas</strong></h1><br/>
-          <p>TODO: img</p>
+          <p><img src="coletando-metricas.gif" alt="coletando metricas" width="360" height="312" /></p>
         </section>
 
         <section>
@@ -192,33 +195,85 @@
         </section>
 
         <section>
-          <h1>Um script para nos ajudar: <strong>check_metrics_json.py</strong></h1><br/>
+          <h1>Um comando para nos ajudar: <strong>grab_my_metrics.py</strong></h1><br/>
           <ul>
-            <li>Aceita qualquer JSON, arquivo local ou URL;<br/><br/></li>
+            <li>Aceita qualquer JSON: arquivo local ou URL;<br/><br/></li>
             <li>Converte o JSON para o formato correto antes de enviar pro <strong>Zabbix</strong>;<br/><br/></li>
             <li>Se o item não existir no Zabbix, ele cria automaticamente.</li>
           </ul>
         </section>
 
+        <section data-background="talk-is-cheap-show-me-the-code.jpg" data-background-repeat="repeat" data-background-size="400px">&nbsp;</section>
+
         <section>
-          <p><img src="wecandoit.png" alt="We can't do it" width="500" height="633" /></p>
+          <h2>https://github.com/Movile/<br/><strong>grab_my_metrics</strong></h2><br/>
+          <ul>
+            <li>Quase pronto! Mas já dá pra usar...<br/><br/></li>
+            <li>Roadmap na parte de issues do Github<br/><br/></li>
+            <li>Open source - Comecem a usar agora mesmo depois da palestra<br/><br/></li>
+          </ul>
         </section>
       </section>
 
       <section>
         <section>
           <h1>Passo 3: <strong>Grafana</strong></h1><br/>
+          <p><img src="metrics-is-a-lie.png" alt="metrics is a lie" width="300" height="300" /></p>
+        </section>
+
+        <section>
+          <h1>Com as métricas no backend, é hora de visualizá-las</h1><br/>
+          <ul>
+            <li>Grafana é absurdamente lindo e fácil;<br/><br/></li>
+            <li>Contém um plugin chamado <strong>grafana-zabbix</strong> que integra totalmente com API do Zabbix;<br/><br/></li>
+            <li>Os usuários podem criar e salvar seus próprios dashboards.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h1>TODO: mais sobre o grafana</h1><br/>
+          <ul>
+            <li>Grafana é absurdamente lindo e fácil;<br/><br/></li>
+            <li>Contém um plugin chamado <strong>grafana-zabbix</strong> que integra totalmente com API do Zabbix;<br/><br/></li>
+            <li>Os usuários podem criar e salvar seus próprios dashboards.</li>
+          </ul>
+        </section>
+      </section>
+
+      <section>
+        <section>
+          <h1>Passo 4: Espalhe o <strong>meme</strong></h1><br/>
           <p>TODO: img</p>
         </section>
 
         <section>
-          <h1>TODO</h1><br/>
+          <h1>O exemplo é a propaganda mais forte</h1><br/>
+          <ol>
+            <li>Uma página com o <strong>Quick Start/Guia</strong> de como começar a se servir;<br/><br/></li>
+            <li>Pegue uma equipe/projeto cobaia e encha o saco deles pra usar;<br/><br/></li>
+            <li>Observe as equipes <strong>invejarem</strong> sua cobaia e começarem a usar também.<br/><br/></li>
+            <li>...</li>
+            <li>Profit!</li>
+          </ol>
+        </section>
+
+        <section>
+          <h1>Contem comigo...</h1><br/>
           <ul>
-            <li>TODO;<br/><br/></li>
-            <li>TODO;<br/><br/></li>
-            <li>TODO.</li>
+            <li>Ultimamente ando muito <strong>carente</strong>;<br/><br/></li>
+            <li>Redes sociais e apps de pegação não me ajudam;<br/><br/></li>
+            <li>Então <strong>empoderem-se</strong> e me chamem pra ajudar!</li>
           </ul>
         </section>
+      </section>
+
+      <section>
+        <h1><strong>#caboucheganaoaguentomais</strong></h1><br/>
+        <p><img src="cat-nails.gif" alt="cat nails" width="500" height="281" /></p>
+        <p>
+          <small>Por Hugo Cisneiros | <a href="http://www.devin.com.br">http://www.devin.com.br</a><br/>
+          Movile: <a href="http://www.movile.com">http://www.movile.com</a></small>
+        </p>
       </section>
 
     </div>
